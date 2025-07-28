@@ -10,7 +10,8 @@ const D2 = (props: SVGProps<SVGSVGElement>) => (
         strokeLinejoin="round"
         {...props}
     >
-        <circle cx="12" cy="12" r="10" />
+        <path d="M3 10h18" />
+        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z" />
     </svg>
 )
 

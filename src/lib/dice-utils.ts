@@ -141,6 +141,7 @@ export function generateFallbackCombinations(
 ): GenerateDiceCombinationsOutput {
   const { minRoll, maxRoll, availableDice } = input;
   const combinations: GenerateDiceCombinationsOutput['combinations'] = [];
+  const hasD2 = availableDice.includes('d2');
 
   const numericDice = availableDice
     .filter(d => d !== 'dF' && d !== 'd2')
@@ -153,9 +154,17 @@ export function generateFallbackCombinations(
     const baseAvg = (sides + 1) / 2;
 
     const targetAvg = (minRoll + maxRoll) / 2;
-    const modifier = Math.round(targetAvg - baseAvg);
+    let modifier = Math.round(targetAvg - baseAvg);
+    let finalDie = `${die}${modifier >= 0 ? '+' : ''}${modifier}`;
+    
+    if (hasD2) {
+        const stats = getCombinationStats(finalDie);
+        const minDiff = minRoll - stats.min;
+        if (minDiff > 0 && minDiff <= 3) {
+            finalDie = `${finalDie}+${minDiff}d2`;
+        }
+    }
 
-    const finalDie = modifier === 0 ? die : `${die}${modifier > 0 ? '+' : ''}${modifier}`;
     const stats = getCombinationStats(finalDie);
     combinations.push({
       dice: finalDie,
@@ -176,9 +185,18 @@ export function generateFallbackCombinations(
             const baseAvg = ((sides1 + 1) / 2) + ((sides2 + 1) / 2);
             
             const targetAvg = (minRoll + maxRoll) / 2;
-            const modifier = Math.round(targetAvg - baseAvg);
+            let modifier = Math.round(targetAvg - baseAvg);
             
-            const finalDie = modifier === 0 ? die : `${die}${modifier > 0 ? '+' : ''}${modifier}`;
+            let finalDie = `${die}${modifier >= 0 ? '+' : ''}${modifier}`;
+            
+            if (hasD2) {
+                const stats = getCombinationStats(finalDie);
+                const minDiff = minRoll - stats.min;
+                if (minDiff > 0 && minDiff <= 3) {
+                    finalDie = `${finalDie}+${minDiff}d2`;
+                }
+            }
+
             const stats = getCombinationStats(finalDie);
             combinations.push({
                 dice: finalDie,
@@ -191,7 +209,10 @@ export function generateFallbackCombinations(
   }
 
   // Remove duplicates and limit to a reasonable number
-  const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice, item])).values());
+  const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice.replace(/\+\d+$/, (match) => {
+    const num = parseInt(match.slice(1));
+    return num === 0 ? "" : match;
+  }), item])).values());
 
   return { combinations: uniqueCombinations.slice(0, 10) };
 }
