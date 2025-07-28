@@ -2,6 +2,11 @@ import type {
   GenerateDiceCombinationsInput,
   GenerateDiceCombinationsOutput,
 } from '@/ai/flows/generate-dice-combinations';
+import type {
+  AnalyzeDiceCombinationInput,
+  AnalyzeDiceCombinationOutput,
+} from '@/ai/flows/analyze-dice-combination';
+
 
 export interface ParsedDice {
   count: number;
@@ -144,8 +149,6 @@ export function generateFallbackCombinations(
   // Simple case: try with one die + modifier
   for (const sides of numericDice) {
     const die = `1d${sides}`;
-    const baseMin = 1;
-    const baseMax = sides;
     const baseAvg = (sides + 1) / 2;
 
     const targetAvg = (minRoll + maxRoll) / 2;
@@ -167,8 +170,6 @@ export function generateFallbackCombinations(
             const sides2 = numericDice[j];
             const die = `1d${sides1}+1d${sides2}`;
             
-            const baseMin = 2;
-            const baseMax = sides1 + sides2;
             const baseAvg = ((sides1 + 1) / 2) + ((sides2 + 1) / 2);
             
             const targetAvg = (minRoll + maxRoll) / 2;
@@ -188,4 +189,31 @@ export function generateFallbackCombinations(
   const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice, item])).values());
 
   return { combinations: uniqueCombinations.slice(0, 10) };
+}
+
+// Fallback analysis generator
+export function generateFallbackAnalysis(
+  input: AnalyzeDiceCombinationInput
+): AnalyzeDiceCombinationOutput {
+  const { diceCombination } = input;
+  const stats = getCombinationStats(diceCombination);
+  const parsed = parseDiceString(diceCombination);
+  const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
+
+  const analysis = `This is a fallback analysis. The combination has a range of ${stats.min} to ${stats.max}, with an average roll of ${stats.average.toFixed(2)}.`;
+  
+  let probabilityDistribution = "The distribution is likely flat if using a single die, or becomes more bell-shaped as more dice are added.";
+  if (numDice > 2) {
+    probabilityDistribution = "With multiple dice, the probability distribution will tend towards a bell curve, making rolls near the average much more common.";
+  } else if (numDice === 1) {
+    probabilityDistribution = "With a single die, the probability distribution is flat, meaning each outcome is equally likely.";
+  }
+
+  const simulationResults = "The simulation graph provides a visual representation of the roll frequencies. For this fallback analysis, we rely on theoretical probabilities.";
+
+  return {
+    analysis,
+    probabilityDistribution,
+    simulationResults,
+  };
 }

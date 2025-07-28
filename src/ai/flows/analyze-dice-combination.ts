@@ -58,7 +58,8 @@ Analyze the provided dice combination. Provide an analysis of its probability di
 
 All your output must be in the following language: {{{language}}}
 
-Dice Combination: {{{diceCombination}}}`,
+Dice Combination: {{{diceCombination}}}
+`,
 });
 
 const analyzeDiceCombinationFlow = ai.defineFlow(
