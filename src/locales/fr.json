@@ -40,12 +40,21 @@
   "toggleLanguage": "Changer de langue",
   "languageLabel": "Langue",
   "fit.perfect": "Ajustement Parfait",
+  "fit.perfect.tooltip": "La plage de la combinaison correspond parfaitement à la plage demandée.",
   "fit.contained": "Contenu dans la Plage",
+  "fit.contained.tooltip": "La plage de cette combinaison est entièrement dans votre plage demandée.",
   "fit.wider": "Plage Enveloppante",
+  "fit.wider.tooltip": "La plage de cette combinaison est plus large et contient entièrement votre plage demandée.",
   "fit.exceedsLow": "Dépasse en Dessous",
+  "fit.exceedsLow.tooltip": "La plage de cette combinaison commence en dessous de votre minimum demandé mais se termine dans la plage.",
   "fit.exceedsHigh": "Dépasse au Dessus",
+  "fit.exceedsHigh.tooltip": "La plage de cette combinaison commence dans votre plage demandée mais se termine au-dessus du maximum.",
   "fit.noOverlap": "Aucun Chevauchement",
+  "fit.noOverlap.tooltip": "La plage de la combinaison ne chevauche pas du tout votre plage demandée.",
   "distribution.bell": "En Cloche",
+  "distribution.bell.tooltip": "Les résultats sont regroupés autour de la moyenne, ce qui les rend plus prévisibles.",
   "distribution.somewhatBell": "Partiellement en Cloche",
-  "distribution.flat": "Plate"
+  "distribution.somewhatBell.tooltip": "Les résultats ont tendance à se situer autour de la moyenne, mais avec plus de variabilité.",
+  "distribution.flat": "Plate",
+  "distribution.flat.tooltip": "Chaque résultat possible a une chance égale de se produire. Plus imprévisible."
 }

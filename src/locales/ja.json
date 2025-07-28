@@ -40,12 +40,21 @@
   "toggleLanguage": "言語を切り替える",
   "languageLabel": "言語",
   "fit.perfect": "完全一致",
+  "fit.perfect.tooltip": "組み合わせの範囲が要求された範囲と完全に一致します。",
   "fit.contained": "範囲内",
+  "fit.contained.tooltip": "この組み合わせの範囲は、要求された範囲内に完全に収まります。",
   "fit.wider": "包括範囲",
+  "fit.wider.tooltip": "この組み合わせの範囲は、要求された範囲よりも広く、完全に含んでいます。",
   "fit.exceedsLow": "下限超え",
+  "fit.exceedsLow.tooltip": "この組み合わせの範囲は、要求された最小値を下回って始まりますが、範囲内で終了します。",
   "fit.exceedsHigh": "上限超え",
+  "fit.exceedsHigh.tooltip": "この組み合わせの範囲は、要求された範囲内で始まりますが、最大値を超えて終了します。",
   "fit.noOverlap": "重複なし",
+  "fit.noOverlap.tooltip": "組み合わせの範囲が要求された範囲とまったく重複しません。",
   "distribution.bell": "ベル形",
+  "distribution.bell.tooltip": "結果は平均値の周りに集中し、予測しやすくなります。",
   "distribution.somewhatBell": "ややベル形",
-  "distribution.flat": "フラット"
+  "distribution.somewhatBell.tooltip": "結果は平均値の周りになる傾向がありますが、ばらつきが大きくなります。",
+  "distribution.flat": "フラット",
+  "distribution.flat.tooltip": "それぞれの可能な結果は、発生する確率が等しいです。より予測不可能です。"
 }

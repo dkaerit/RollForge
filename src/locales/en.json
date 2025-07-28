@@ -40,12 +40,21 @@
   "toggleLanguage": "Toggle language",
   "languageLabel": "Language",
   "fit.perfect": "Perfect Fit",
+  "fit.perfect.tooltip": "The combination's range perfectly matches the requested range.",
   "fit.contained": "Contained in Range",
+  "fit.contained.tooltip": "The combination's range is entirely within your requested range.",
   "fit.wider": "Enveloping Range",
+  "fit.wider.tooltip": "The combination's range is wider than and completely contains your requested range.",
   "fit.exceedsLow": "Exceeds Below",
+  "fit.exceedsLow.tooltip": "The combination's range starts below your requested minimum but ends within the range.",
   "fit.exceedsHigh": "Exceeds Above",
+  "fit.exceedsHigh.tooltip": "The combination's range starts within your requested range but ends above the maximum.",
   "fit.noOverlap": "No Overlap",
+  "fit.noOverlap.tooltip": "The combination's range does not overlap with your requested range at all.",
   "distribution.bell": "Bell-shaped",
+  "distribution.bell.tooltip": "Results are clustered around the average, making them more predictable.",
   "distribution.somewhatBell": "Somewhat Bell-shaped",
-  "distribution.flat": "Flat"
+  "distribution.somewhatBell.tooltip": "Results tend to be around the average, but with more variability.",
+  "distribution.flat": "Flat",
+  "distribution.flat.tooltip": "Each possible result has an equal chance of occurring. More unpredictable."
 }

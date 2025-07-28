@@ -40,12 +40,21 @@
   "toggleLanguage": "Cambiar idioma",
   "languageLabel": "Idioma",
   "fit.perfect": "Ajuste Perfecto",
+  "fit.perfect.tooltip": "El rango de la combinación coincide exactamente con el rango solicitado.",
   "fit.contained": "Contenido en Rango",
+  "fit.contained.tooltip": "El rango de esta combinación está completamente dentro de los límites que solicitaste.",
   "fit.wider": "Rango Envolvente",
+  "fit.wider.tooltip": "El rango de esta combinación es más amplio y contiene completamente el rango que solicitaste.",
   "fit.exceedsLow": "Excede por Debajo",
+  "fit.exceedsLow.tooltip": "El rango de esta combinación comienza por debajo de tu mínimo solicitado pero termina dentro del rango.",
   "fit.exceedsHigh": "Excede por Arriba",
+  "fit.exceedsHigh.tooltip": "El rango de esta combinación comienza dentro de tu rango solicitado pero termina por encima del máximo.",
   "fit.noOverlap": "Sin Solapamiento",
+  "fit.noOverlap.tooltip": "El rango de la combinación no se solapa en absoluto con el rango solicitado.",
   "distribution.bell": "Acampanada",
+  "distribution.bell.tooltip": "Los resultados se agrupan en torno al promedio, haciéndolos más predecibles.",
   "distribution.somewhatBell": "Algo Acampanada",
-  "distribution.flat": "Plana"
+  "distribution.somewhatBell.tooltip": "Los resultados tienden a estar cerca del promedio, pero con más variabilidad.",
+  "distribution.flat": "Plana",
+  "distribution.flat.tooltip": "Cada resultado posible tiene la misma probabilidad de ocurrir. Más impredecible."
 }

@@ -40,12 +40,21 @@
   "toggleLanguage": "切换语言",
   "languageLabel": "语言",
   "fit.perfect": "完美匹配",
+  "fit.perfect.tooltip": "组合的范围与请求的范围完全匹配。",
   "fit.contained": "包含在范围内",
+  "fit.contained.tooltip": "此组合的范围完全在您请求的范围内。",
   "fit.wider": "包络范围",
+  "fit.wider.tooltip": "此组合的范围比您请求的范围更宽并完全包含它。",
   "fit.exceedsLow": "低于下限",
+  "fit.exceedsLow.tooltip": "此组合的范围始于您请求的最小值以下，但在范围内结束。",
   "fit.exceedsHigh": "超出上限",
+  "fit.exceedsHigh.tooltip": "此组合的范围始于您请求的范围内，但高于最大值结束。",
   "fit.noOverlap": "无重叠",
+  "fit.noOverlap.tooltip": "组合的范围与您请求的范围完全没有重叠。",
   "distribution.bell": "钟形分布",
+  "distribution.bell.tooltip": "结果集中在平均值附近，使其更具可预测性。",
   "distribution.somewhatBell": "类钟形分布",
-  "distribution.flat": "平坦分布"
+  "distribution.somewhatBell.tooltip": "结果倾向于在平均值附近，但具有更大的可变性。",
+  "distribution.flat": "平坦分布",
+  "distribution.flat.tooltip": "每个可能的结果出现的几率均等。更不可预测。"
 }

@@ -8,5 +8,3 @@ export interface DiceCombination {
   fitDescription: string;
   fitScore: number;
 }
-
-    
