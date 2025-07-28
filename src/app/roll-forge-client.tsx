@@ -32,7 +32,14 @@ export function RollForgeClient() {
 
       if (result?.combinations) {
         const processedCombinations = result.combinations
-          .filter(combo => combo && typeof combo.min === 'number' && typeof combo.max === 'number' && typeof combo.average === 'number' && typeof combo.distributionScore === 'number')
+          .filter(
+            (combo): combo is DiceCombination =>
+              combo &&
+              typeof combo.min === 'number' &&
+              typeof combo.max === 'number' &&
+              typeof combo.average === 'number' &&
+              typeof combo.distributionScore === 'number'
+          )
           .map((combo) => {
             const rangeDiff = maxRoll - minRoll;
             const deviation =
