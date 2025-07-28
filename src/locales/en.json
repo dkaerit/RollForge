@@ -41,7 +41,7 @@
   "languageLabel": "Language",
   "fit.perfect": "Perfect Fit",
   "fit.close": "Close Fit",
-  "fit.narrower": "Narrower Range",
+  "fit.narrower": "Inside Range",
   "fit.wider": "Wider Range",
   "distribution.bell": "Bell-shaped",
   "distribution.somewhatBell": "Somewhat Bell-shaped",
