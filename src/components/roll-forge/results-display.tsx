@@ -37,6 +37,16 @@ export function ResultsDisplay({
     return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
   };
 
+  const getFitColor = (score: number) => {
+    if (score >= 95) {
+      return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
+    }
+    if (score >= 75) {
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+    }
+    return 'bg-red-500/20 text-red-400 border-red-500/30';
+  }
+
   if (isPending) {
     return (
       <div className="space-y-4">
@@ -92,7 +102,7 @@ export function ResultsDisplay({
               <Badge variant="outline">{t('minLabel')}: {combo.min}</Badge>
               <Badge variant="outline">{t('maxLabel')}: {combo.max}</Badge>
               <Badge variant="outline">{t('avgLabel')}: {combo.average.toFixed(2)}</Badge>
-              <Badge variant="secondary" className="gap-1.5"><Ruler className="h-3 w-3" /> {t(combo.fitDescription)} ({combo.fitScore.toFixed(0)}%)</Badge>
+              <Badge variant="secondary" className={cn('gap-1.5', getFitColor(combo.fitScore))}><Ruler className="h-3 w-3" /> {t(combo.fitDescription)} ({combo.fitScore.toFixed(0)}%)</Badge>
               <Badge
                 variant="outline"
                 className={cn('gap-1.5', getDistributionColor(combo.distributionScore))}
