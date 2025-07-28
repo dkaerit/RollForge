@@ -113,31 +113,12 @@ export function RollForgeClient() {
             };
           })
           .sort((a, b) => {
-            const getSortCategory = (c: DiceCombination) => {
-                if (c.fitScore === 100 && c.distributionShape === 'distribution.flat') return 1;
-                if (c.fitScore >= 80 && c.distributionShape === 'distribution.flat') return 2;
-                if (c.fitScore >= 80 && c.distributionShape === 'distribution.somewhatBell') return 3;
-                if (c.fitScore <= 70 && c.distributionShape === 'distribution.flat') return 4;
-                if (c.fitScore <= 70 && c.distributionShape === 'distribution.somewhatBell') return 5;
-                if (c.fitScore <= 70 && c.distributionShape === 'distribution.bell') return 6;
-                // Fallback for combinations that don't fit the main criteria
-                // This will push intermediate fit scores (70-80) and bell distributions with high fit scores to the end.
-                return 7;
-            };
-
-            const categoryA = getSortCategory(a);
-            const categoryB = getSortCategory(b);
-
-            if (categoryA !== categoryB) {
-                return categoryA - categoryB;
-            }
-
-            // Secondary sorting: higher fit score is better
+            // Primary sorting: higher fit score is better
             if (b.fitScore !== a.fitScore) {
                 return b.fitScore - a.fitScore;
             }
             
-            // Tertiary sorting: lower distribution score is better (flatter)
+            // Secondary sorting: lower distribution score is better (flatter is preferred)
             return a.distributionScore - b.distributionScore;
           });
         setCombinations(processedCombinations);
