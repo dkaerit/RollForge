@@ -52,11 +52,11 @@ const analyzeDiceCombinationPrompt = ai.definePrompt({
   name: 'analyzeDiceCombinationPrompt',
   input: {schema: AnalyzeDiceCombinationInputSchema},
   output: {schema: AnalyzeDiceCombinationOutputSchema},
-  prompt: `You are a game design expert, especially skilled in designing and balancing game mechanics with dice.
+  prompt: `You are a game design expert, skilled in balancing game mechanics with dice.
 
-You will analyze the dice combination provided, and provide an analysis of the probability distribution, mean, and standard deviation. Also simulate the dice combination and provide the results.
+Analyze the provided dice combination. Provide an analysis of its probability distribution, mean, and standard deviation.
 
-All your output text MUST be in the following language: {{{language}}}
+All your output must be in the following language: {{{language}}}
 
 Dice Combination: {{{diceCombination}}}`,
 });

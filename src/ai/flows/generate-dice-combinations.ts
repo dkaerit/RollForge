@@ -54,21 +54,20 @@ Maximum: {{{maxRoll}}}
 
 Available Dice: {{{availableDice}}}
 
-Suggest several dice combinations using the available dice that can achieve the target range.
-The dice 'd2' is special, it rolls a 0 or a 1. This is useful for increasing the maximum roll without affecting the minimum.
-The dice 'dF' is a Fudge die, it rolls -1, 0, or 1. This is useful for creating a wider range of results centered around a base value.
-Also consider using positive and negative modifiers (e.g., +1, -1, -3, -5) to help get closer to the target range.
-Return multiple possible combinations.
-Ensure that the min, max and average fields are correct.
+Suggest several creative dice combinations using the available dice.
+- The 'd2' die rolls 0 or 1.
+- The 'dF' (Fudge) die rolls -1, 0, or 1.
+- You can use positive and negative modifiers (e.g., +1, -5).
 
-Be creative in finding dice combinations that meet the minimum and maximum values, and attempt to get as close to the average as possible.
+For each combination, you must provide:
+1.  **dice**: The dice combination string (e.g., '1d6+2d4+3', '2d8-1').
+2.  **min**: The minimum possible roll.
+3.  **max**: The maximum possible roll.
+4.  **average**: The average roll.
+5.  **distributionShape**: A key describing the probability distribution. Use 'distribution.bell' (for combinations with many dice), 'distribution.somewhatBell' (for 2-3 dice), or 'distribution.flat' (for single dice).
+6.  **distributionScore**: A score from 0.0 (flat) to 2.0 (very bell-shaped). A single die is 0.0. Multiple dice increase the score. 2d6 is about 1.2. 3d6 is about 1.8.
 
-For each combination, provide:
-1.  **distributionShape**: A translation key describing the probability distribution shape. Use one of the following: 'distribution.bell' (score > 1.5), 'distribution.somewhatBell' (score > 0.5), 'distribution.flat' (otherwise).
-2.  **distributionScore**: A numerical score from 0.0 (flat) to 2.0 (very bell-shaped) representing the distribution shape. It MUST be a decimal value to provide granularity. Do not just use 0.0, 1.0, or 2.0. The more dice in the combination, the higher the score. A single die is always flat (0.0). For example, 2d6 (score ~1.2) is more bell-shaped than 2d4 (score ~0.8). 3d6 should have a very high score (~1.8). Provide a precise decimal value.
-
-Output should be a JSON array. For each element in the array, the dice field should be a textual representation of the dice combination. Example: '1d6+2d4+3' or '2d8-1' or '4dF+10'.
-Dice should be chosen from the list of available dice.
+Ensure the min, max, and average values are accurate for each combination.
 `,
 });
 
