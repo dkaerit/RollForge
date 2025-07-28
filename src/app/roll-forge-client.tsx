@@ -31,34 +31,34 @@ export function RollForgeClient() {
       });
 
       if (result?.combinations) {
-        const processedCombinations = result.combinations.map((combo) => {
-          // Calculate fitScore
-          const rangeDiff = maxRoll - minRoll;
-          const deviation =
-            Math.abs(minRoll - combo.min) + Math.abs(maxRoll - combo.max);
-          let fitScore = 0;
-          if (rangeDiff > 0) {
-            fitScore = Math.max(0, (1 - deviation / rangeDiff) * 100);
-          } else if (deviation === 0) {
-            fitScore = 100;
-          }
+        const processedCombinations = result.combinations
+          .map((combo) => {
+            const rangeDiff = maxRoll - minRoll;
+            const deviation =
+              Math.abs(minRoll - combo.min) + Math.abs(maxRoll - combo.max);
+            let fitScore = 0;
+            if (rangeDiff > 0) {
+              fitScore = Math.max(0, (1 - deviation / rangeDiff) * 100);
+            } else if (deviation === 0) {
+              fitScore = 100;
+            }
 
-          // Determine fitDescription
-          let fitDescription = 'fit.wider';
-          if (combo.min === minRoll && combo.max === maxRoll) {
-            fitDescription = 'fit.perfect';
-          } else if (combo.min >= minRoll && combo.max <= maxRoll) {
-            fitDescription = 'fit.narrower';
-          } else if (fitScore > 80) {
-             fitDescription = 'fit.close';
-          }
+            let fitDescription = 'fit.wider';
+            if (combo.min === minRoll && combo.max === maxRoll) {
+              fitDescription = 'fit.perfect';
+            } else if (combo.min >= minRoll && combo.max <= maxRoll) {
+              fitDescription = 'fit.narrower';
+            } else if (fitScore > 80) {
+              fitDescription = 'fit.close';
+            }
 
-          return {
-            ...combo,
-            fitScore,
-            fitDescription,
-          };
-        });
+            return {
+              ...combo,
+              fitScore,
+              fitDescription,
+            };
+          })
+          .sort((a, b) => b.fitScore - a.fitScore);
         setCombinations(processedCombinations);
       } else {
         toast({
