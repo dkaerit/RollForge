@@ -83,8 +83,6 @@ export function CombinationAnalysisDialog({
       startTransition(async () => {
         const result = await analyzeCombinationAction({
           diceCombination: combination.dice,
-          minRange: combination.min,
-          maxRange: combination.max,
           language: language,
         });
 

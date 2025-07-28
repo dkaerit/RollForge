@@ -14,15 +14,7 @@ import {z} from 'genkit';
 const AnalyzeDiceCombinationInputSchema = z.object({
   diceCombination: z
     .string()
-    .describe('A dice combination macro (e.g., \'1d6+2d4+3\').'),
-  minRange: z
-    .number()
-    .optional()
-    .describe('The minimum target number the dice combination should achieve.'),
-  maxRange: z
-    .number()
-    .optional()
-    .describe('The maximum target number the dice combination should achieve.'),
+    .describe("A dice combination macro (e.g., '1d6+2d4+3')."),
   language: z.string().describe('The language to use for the analysis.'),
 });
 export type AnalyzeDiceCombinationInput = z.infer<
@@ -33,7 +25,7 @@ const AnalyzeDiceCombinationOutputSchema = z.object({
   analysis: z
     .string()
     .describe(
-      'An analysis of the dice combination, including its probability distribution, mean, standard deviation, and suitability for achieving the target range.'
+      'An analysis of the dice combination, including its probability distribution, mean, and standard deviation.'
     ),
   probabilityDistribution: z
     .string()
@@ -62,13 +54,11 @@ const analyzeDiceCombinationPrompt = ai.definePrompt({
   output: {schema: AnalyzeDiceCombinationOutputSchema},
   prompt: `You are a game design expert, especially skilled in designing and balancing game mechanics with dice.
 
-You will analyze the dice combination provided, and provide an analysis of the probability distribution, mean, standard deviation, and suitability for achieving the target range. Also simulate the dice combination and provide the results.
+You will analyze the dice combination provided, and provide an analysis of the probability distribution, mean, and standard deviation. Also simulate the dice combination and provide the results.
 
 All your output text MUST be in the following language: {{{language}}}
 
-Dice Combination: {{{diceCombination}}}
-Min Range: {{{minRange}}}
-Max Range: {{{maxRange}}}`,
+Dice Combination: {{{diceCombination}}}`,
 });
 
 const analyzeDiceCombinationFlow = ai.defineFlow(
