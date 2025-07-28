@@ -56,5 +56,6 @@
   "distribution.somewhatBell": "ややベル形",
   "distribution.somewhatBell.tooltip": "結果は平均値の周りになる傾向がありますが、ばらつきが大きくなります。",
   "distribution.flat": "フラット",
-  "distribution.flat.tooltip": "それぞれの可能な結果は、発生する確率が等しいです。より予測不可能です。"
+  "distribution.flat.tooltip": "それぞれの可能な結果は、発生する確率が等しいです。より予測不可能です。",
+  "distributionScoreLabel": "分布スコア"
 }

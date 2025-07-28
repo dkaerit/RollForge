@@ -56,5 +56,6 @@
   "distribution.somewhatBell": "Partiellement en Cloche",
   "distribution.somewhatBell.tooltip": "Les résultats ont tendance à se situer autour de la moyenne, mais avec plus de variabilité.",
   "distribution.flat": "Plate",
-  "distribution.flat.tooltip": "Chaque résultat possible a une chance égale de se produire. Plus imprévisible."
+  "distribution.flat.tooltip": "Chaque résultat possible a une chance égale de se produire. Plus imprévisible.",
+  "distributionScoreLabel": "Score de Distribution"
 }

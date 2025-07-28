@@ -146,6 +146,7 @@ export function ResultsDisplay({
                   </TooltipTrigger>
                    <TooltipContent>
                     <p>{t(`${combo.distributionShape}.tooltip`)}</p>
+                    <p className="text-xs text-muted-foreground">{t('distributionScoreLabel')}: {combo.distributionScore.toFixed(2)}</p>
                   </TooltipContent>
                 </Tooltip>
               </div>

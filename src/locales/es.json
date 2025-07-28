@@ -56,5 +56,6 @@
   "distribution.somewhatBell": "Algo Acampanada",
   "distribution.somewhatBell.tooltip": "Los resultados tienden a estar cerca del promedio, pero con más variabilidad.",
   "distribution.flat": "Plana",
-  "distribution.flat.tooltip": "Cada resultado posible tiene la misma probabilidad de ocurrir. Más impredecible."
+  "distribution.flat.tooltip": "Cada resultado posible tiene la misma probabilidad de ocurrir. Más impredecible.",
+  "distributionScoreLabel": "Puntuación de Distribución"
 }

@@ -56,5 +56,6 @@
   "distribution.somewhatBell": "类钟形分布",
   "distribution.somewhatBell.tooltip": "结果倾向于在平均值附近，但具有更大的可变性。",
   "distribution.flat": "平坦分布",
-  "distribution.flat.tooltip": "每个可能的结果出现的几率均等。更不可预测。"
+  "distribution.flat.tooltip": "每个可能的结果出现的几率均等。更不可预测。",
+  "distributionScoreLabel": "分布分数"
 }

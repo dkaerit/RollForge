@@ -56,5 +56,6 @@
   "distribution.somewhatBell": "Somewhat Bell-shaped",
   "distribution.somewhatBell.tooltip": "Results tend to be around the average, but with more variability.",
   "distribution.flat": "Flat",
-  "distribution.flat.tooltip": "Each possible result has an equal chance of occurring. More unpredictable."
+  "distribution.flat.tooltip": "Each possible result has an equal chance of occurring. More unpredictable.",
+  "distributionScoreLabel": "Distribution Score"
 }
