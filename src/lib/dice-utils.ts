@@ -1,3 +1,8 @@
+import type {
+  GenerateDiceCombinationsInput,
+  GenerateDiceCombinationsOutput,
+} from '@/ai/flows/generate-dice-combinations';
+
 export interface ParsedDice {
   count: number;
   sides: number | 'F';
@@ -12,16 +17,17 @@ export function parseDiceString(macro: string): ParsedMacro {
   const parts = macro.replace(/\s/g, '').split(/(?=[+-])/);
   const result: ParsedMacro = { dice: [], modifier: 0 };
 
-  const dieRegex = /(\d+)d(\d+|F)/i;
+  const dieRegex = /(\d*)d(\d+|F)/i;
 
   for (const part of parts) {
     const trimmedPart = part.trim();
     const dieMatch = trimmedPart.match(dieRegex);
 
     if (dieMatch) {
+       const count = dieMatch[1] ? parseInt(dieMatch[1], 10) : 1;
       const sides = dieMatch[2].toUpperCase() === 'F' ? 'F' : parseInt(dieMatch[2], 10);
       result.dice.push({
-        count: parseInt(dieMatch[1], 10),
+        count: count,
         sides: sides,
       });
     } else {
@@ -31,6 +37,31 @@ export function parseDiceString(macro: string): ParsedMacro {
 
   return result;
 }
+
+export function getCombinationStats(macro: string): { min: number, max: number, average: number } {
+    const { dice, modifier } = parseDiceString(macro);
+    let min = modifier;
+    let max = modifier;
+    let average = modifier;
+
+    for (const die of dice) {
+        if (die.sides === 'F') {
+            min += die.count * -1;
+            max += die.count * 1;
+            average += die.count * 0;
+        } else if (die.sides === 2) {
+            min += die.count * 0;
+            max += die.count * 1;
+            average += die.count * 0.5;
+        } else if (typeof die.sides === 'number') {
+            min += die.count * 1;
+            max += die.count * die.sides;
+            average += die.count * ((die.sides + 1) / 2);
+        }
+    }
+    return { min, max, average };
+}
+
 
 export function simulateRoll(macro: string): number {
   const { dice, modifier } = parseDiceString(macro);
@@ -70,7 +101,7 @@ export function calculateTheoreticalDistribution(
   const { dice, modifier } = parseDiceString(macro);
   const results: Record<number, number> = {};
   
-  if (dice.length === 1 && typeof dice[0].sides === 'number') {
+  if (dice.length === 1 && typeof dice[0].sides === 'number' && dice[0].count === 1) {
     const sides = dice[0].sides;
     const isD2 = sides === 2;
     const runsPerOutcome = totalRuns / (isD2 ? 2 : sides);
@@ -96,4 +127,65 @@ export function formatSimulationDataForChart(
   return Object.entries(data)
     .map(([roll, frequency]) => ({ roll: parseInt(roll, 10), frequency }))
     .sort((a, b) => a.roll - b.roll);
+}
+
+// Fallback generator
+export function generateFallbackCombinations(
+  input: GenerateDiceCombinationsInput
+): GenerateDiceCombinationsOutput {
+  const { minRoll, maxRoll, availableDice } = input;
+  const combinations: GenerateDiceCombinationsOutput['combinations'] = [];
+
+  const numericDice = availableDice
+    .filter(d => d !== 'dF' && d !== 'd2')
+    .map(d => parseInt(d.slice(1), 10))
+    .sort((a, b) => a - b);
+  
+  // Simple case: try with one die + modifier
+  for (const sides of numericDice) {
+    const die = `1d${sides}`;
+    const baseMin = 1;
+    const baseMax = sides;
+    const baseAvg = (sides + 1) / 2;
+
+    const targetAvg = (minRoll + maxRoll) / 2;
+    const modifier = Math.round(targetAvg - baseAvg);
+
+    const finalDie = modifier === 0 ? die : `${die}${modifier > 0 ? '+' : ''}${modifier}`;
+    const stats = getCombinationStats(finalDie);
+    combinations.push({
+      dice: finalDie,
+      ...stats
+    });
+  }
+
+  // Case 2: try with two dice + modifier
+  if (numericDice.length > 1) {
+    for (let i = 0; i < numericDice.length; i++) {
+        for (let j = i; j < numericDice.length; j++) {
+            const sides1 = numericDice[i];
+            const sides2 = numericDice[j];
+            const die = `1d${sides1}+1d${sides2}`;
+            
+            const baseMin = 2;
+            const baseMax = sides1 + sides2;
+            const baseAvg = ((sides1 + 1) / 2) + ((sides2 + 1) / 2);
+            
+            const targetAvg = (minRoll + maxRoll) / 2;
+            const modifier = Math.round(targetAvg - baseAvg);
+            
+            const finalDie = modifier === 0 ? die : `${die}${modifier > 0 ? '+' : ''}${modifier}`;
+            const stats = getCombinationStats(finalDie);
+            combinations.push({
+                dice: finalDie,
+                ...stats
+            });
+        }
+    }
+  }
+
+  // Remove duplicates and limit to a reasonable number
+  const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice, item])).values());
+
+  return { combinations: uniqueCombinations.slice(0, 10) };
 }

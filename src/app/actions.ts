@@ -10,16 +10,30 @@ import {
   type AnalyzeDiceCombinationInput,
   type AnalyzeDiceCombinationOutput,
 } from '@/ai/flows/analyze-dice-combination';
+import { generateFallbackCombinations } from '@/lib/dice-utils';
 
 export async function generateCombinationsAction(
   input: GenerateDiceCombinationsInput
 ): Promise<GenerateDiceCombinationsOutput | null> {
   try {
+    console.log('Attempting to generate combinations with AI...');
     const result = await generateDiceCombinations(input);
-    return result;
+    if (result && result.combinations && result.combinations.length > 0) {
+      console.log('AI generation successful.');
+      return result;
+    }
+    console.log('AI returned no combinations, trying fallback.');
+    const fallbackResult = generateFallbackCombinations(input);
+    return fallbackResult;
   } catch (error) {
-    console.error('Error generating combinations:', error);
-    return null;
+    console.error('Error generating combinations with AI, using fallback:', error);
+    try {
+      const fallbackResult = generateFallbackCombinations(input);
+      return fallbackResult;
+    } catch (fallbackError) {
+      console.error('Error generating fallback combinations:', fallbackError);
+      return null;
+    }
   }
 }
 
