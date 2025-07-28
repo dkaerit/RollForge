@@ -34,17 +34,21 @@ export function RollForgeClient() {
       if (result?.combinations) {
         const processedCombinations = result.combinations
           .filter(
-            (combo): combo is DiceCombination =>
+            (combo): combo is Omit<DiceCombination, 'fitScore' | 'fitDescription' | 'distributionScore' | 'distributionShape'> =>
               combo &&
+              typeof combo.dice === 'string' &&
               typeof combo.min === 'number' &&
               typeof combo.max === 'number' &&
               typeof combo.average === 'number'
           )
           .map((combo) => {
-            // Calculate Fit Score & Description
+            const comboMin = combo.min;
+            const comboMax = combo.max;
+            
+            // Calculate Fit Score
             const rangeDiff = maxRoll - minRoll;
             const deviation =
-              Math.abs(minRoll - combo.min) + Math.abs(maxRoll - combo.max);
+              Math.abs(minRoll - comboMin) + Math.abs(maxRoll - comboMax);
             let fitScore = 0;
             if (rangeDiff > 0) {
               fitScore = Math.max(0, (1 - deviation / rangeDiff) * 100);
@@ -52,10 +56,8 @@ export function RollForgeClient() {
               fitScore = 100;
             }
 
+            // Determine Fit Description
             let fitDescription = 'fit.noOverlap';
-            const comboMin = combo.min;
-            const comboMax = combo.max;
-
             const isContained = comboMin >= minRoll && comboMax <= maxRoll;
             const isWider = comboMin < minRoll && comboMax > maxRoll;
             const isDisplacedLow = comboMin < minRoll && comboMax >= minRoll && comboMax <= maxRoll;

@@ -41,7 +41,7 @@
   "languageLabel": "Language",
   "fit.perfect": "Perfect Fit",
   "fit.contained": "Contained in Range",
-  "fit.wider": "Wider Range",
+  "fit.wider": "Enveloping Range",
   "fit.exceedsLow": "Exceeds Below",
   "fit.exceedsHigh": "Exceeds Above",
   "fit.noOverlap": "No Overlap",

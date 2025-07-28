@@ -41,7 +41,7 @@
   "languageLabel": "Язык",
   "fit.perfect": "Идеальное Совпадение",
   "fit.contained": "Внутри Диапазона",
-  "fit.wider": "Широкий Диапазон",
+  "fit.wider": "Охватывающий Диапазон",
   "fit.exceedsLow": "Выходит за Нижнюю Границу",
   "fit.exceedsHigh": "Выходит за Верхнюю Границу",
   "fit.noOverlap": "Нет Пересечения",

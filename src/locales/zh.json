@@ -41,7 +41,7 @@
   "languageLabel": "语言",
   "fit.perfect": "完美匹配",
   "fit.contained": "包含在范围内",
-  "fit.wider": "范围更广",
+  "fit.wider": "包络范围",
   "fit.exceedsLow": "低于下限",
   "fit.exceedsHigh": "超出上限",
   "fit.noOverlap": "无重叠",
