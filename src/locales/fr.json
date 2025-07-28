@@ -40,7 +40,7 @@
   "toggleLanguage": "Changer de langue",
   "languageLabel": "Langue",
   "fit.perfect": "Ajustement Parfait",
-  "fit.perfect.tooltip": "La plage de la combinaison correspond parfaitement à la plage demandée.",
+  "fit.perfect.tooltip": "La plage de la combinaison correspond perfectly à la plage demandée.",
   "fit.contained": "Contenu dans la Plage",
   "fit.contained.tooltip": "La plage de cette combinaison est entièrement dans votre plage demandée.",
   "fit.wider": "Plage Enveloppante",
@@ -57,5 +57,10 @@
   "distribution.somewhatBell.tooltip": "Les résultats ont tendance à se situer autour de la moyenne, mais avec plus de variabilité.",
   "distribution.flat": "Plate",
   "distribution.flat.tooltip": "Chaque résultat possible a une chance égale de se produire. Plus imprévisible.",
-  "distributionScoreLabel": "Score de Distribution"
+  "distributionScoreLabel": "Score de Distribution",
+  "fallback.analysis": "Ceci est une analyse de repli. La combinaison a une plage de {{min}} à {{max}}, avec un lancer moyen de {{average}}.",
+  "fallback.probability.flat": "Avec un seul dé, la distribution de probabilité est plate, ce qui signifie que chaque résultat est également probable.",
+  "fallback.probability.somewhatBell": "La distribution est susceptible d'être quelque peu en forme de cloche, avec des résultats regroupés autour de la moyenne.",
+  "fallback.probability.bell": "Avec plusieurs dés, la distribution de probabilité tendra vers une courbe en cloche, rendant les lancers proches de la moyenne beaucoup plus courants.",
+  "fallback.simulation": "Le graphique de simulation fournit une représentation visuelle des fréquences des lancers. Pour cette analyse de repli, nous nous basons sur des probabilités théoriques."
 }

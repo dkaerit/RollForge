@@ -55,6 +55,7 @@ export function getCombinationStats(macro: string): { min: number, max: number, 
             max += die.count * 1;
             average += die.count * 0;
         } else if (die.sides === 2) {
+            // Special case for d2 to be 0 or 1
             min += die.count * 0;
             max += die.count * 1;
             average += die.count * 0.5;
@@ -200,24 +201,25 @@ export function generateFallbackAnalysis(
   input: AnalyzeDiceCombinationInput
 ): AnalyzeDiceCombinationOutput {
   const { diceCombination } = input;
-  const stats = getCombinationStats(diceCombination);
   const parsed = parseDiceString(diceCombination);
   const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
 
-  const analysis = `This is a fallback analysis. The combination has a range of ${stats.min} to ${stats.max}, with an average roll of ${stats.average.toFixed(2)}.`;
+  const analysisKey = 'fallback.analysis';
   
-  let probabilityDistribution = "The distribution is likely flat if using a single die, or becomes more bell-shaped as more dice are added.";
+  let probabilityDistributionKey;
   if (numDice > 2) {
-    probabilityDistribution = "With multiple dice, the probability distribution will tend towards a bell curve, making rolls near the average much more common.";
+    probabilityDistributionKey = 'fallback.probability.bell';
   } else if (numDice === 1) {
-    probabilityDistribution = "With a single die, the probability distribution is flat, meaning each outcome is equally likely.";
+    probabilityDistributionKey = 'fallback.probability.flat';
+  } else {
+    probabilityDistributionKey = 'fallback.probability.somewhatBell';
   }
 
-  const simulationResults = "The simulation graph provides a visual representation of the roll frequencies. For this fallback analysis, we rely on theoretical probabilities.";
+  const simulationResultsKey = 'fallback.simulation';
 
   return {
-    analysis,
-    probabilityDistribution,
-    simulationResults,
+    analysis: analysisKey,
+    probabilityDistribution: probabilityDistributionKey,
+    simulationResults: simulationResultsKey,
   };
 }

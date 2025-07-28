@@ -31,6 +31,7 @@ import {
   simulateRoll,
   calculateTheoreticalDistribution,
   parseDiceString,
+  getCombinationStats,
 } from '@/lib/dice-utils';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -107,6 +108,24 @@ export function CombinationAnalysisDialog({
   const handleSimulateRoll = () => {
     setSingleRoll(simulateRoll(combination.dice));
   };
+  
+  const translatedAnalysis = useMemo(() => {
+    if (!analysis) return null;
+
+    const stats = getCombinationStats(combination.dice);
+    const options = {
+      min: stats.min,
+      max: stats.max,
+      average: stats.average.toFixed(2),
+    };
+    
+    return {
+        analysis: t(analysis.analysis, options),
+        probabilityDistribution: t(analysis.probabilityDistribution, options),
+        simulationResults: t(analysis.simulationResults, options)
+    }
+  }, [analysis, t, combination.dice]);
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -158,7 +177,7 @@ export function CombinationAnalysisDialog({
         </div>
          <div className="mt-6">
             <h3 className="font-headline text-xl text-primary mb-4">{t('aiAnalysisTitle')}</h3>
-            {isPending && !analysis ? (
+            {isPending && !translatedAnalysis ? (
                 <div className="space-y-4">
                     <Skeleton className="h-24 w-full" />
                     <Skeleton className="h-24 w-full" />
@@ -167,15 +186,15 @@ export function CombinationAnalysisDialog({
                 <div className="space-y-4 text-sm">
                     <Card>
                         <CardHeader><CardTitle className="font-headline text-lg">{t('overallAnalysisTitle')}</CardTitle></CardHeader>
-                        <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{analysis?.analysis}</p></CardContent>
+                        <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{translatedAnalysis?.analysis}</p></CardContent>
                     </Card>
                      <Card>
                         <CardHeader><CardTitle className="font-headline text-lg">{t('probabilityInsightsTitle')}</CardTitle></CardHeader>
-                        <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{analysis?.probabilityDistribution}</p></CardContent>
+                        <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{translatedAnalysis?.probabilityDistribution}</p></CardContent>
                     </Card>
                      <Card>
                         <CardHeader><CardTitle className="font-headline text-lg">{t('simulationAnalysisTitle')}</CardTitle></CardHeader>
-                        <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{analysis?.simulationResults}</p></CardContent>
+                        <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{translatedAnalysis?.simulationResults}</p></CardContent>
                     </Card>
                 </div>
             )}

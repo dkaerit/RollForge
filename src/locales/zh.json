@@ -57,5 +57,10 @@
   "distribution.somewhatBell.tooltip": "结果倾向于在平均值附近，但具有更大的可变性。",
   "distribution.flat": "平坦分布",
   "distribution.flat.tooltip": "每个可能的结果出现的几率均等。更不可预测。",
-  "distributionScoreLabel": "分布分数"
+  "distributionScoreLabel": "分布分数",
+  "fallback.analysis": "这是一个备用分析。该组合的范围为 {{min}} 到 {{max}}，平均投掷值为 {{average}}。",
+  "fallback.probability.flat": "使用单个骰子时，概率分布是平坦的，这意味着每个结果都是等可能的。",
+  "fallback.probability.somewhatBell": "分布可能有些钟形，结果聚集在平均值附近。",
+  "fallback.probability.bell": "使用多个骰子时，概率分布将趋向于钟形曲线，使得接近平均值的投掷更加常见。",
+  "fallback.simulation": "模拟图提供了投掷频率的可视化表示。对于此备用分析，我们依赖于理论概率。"
 }

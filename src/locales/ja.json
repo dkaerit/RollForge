@@ -57,5 +57,10 @@
   "distribution.somewhatBell.tooltip": "結果は平均値の周りになる傾向がありますが、ばらつきが大きくなります。",
   "distribution.flat": "フラット",
   "distribution.flat.tooltip": "それぞれの可能な結果は、発生する確率が等しいです。より予測不可能です。",
-  "distributionScoreLabel": "分布スコア"
+  "distributionScoreLabel": "分布スコア",
+  "fallback.analysis": "これはフォールバック分析です。組み合わせの範囲は{{min}}から{{max}}で、平均ロールは{{average}}です。",
+  "fallback.probability.flat": "単一のサイコロを使用する場合、確率分布はフラットであり、各結果が等しく可能性があります。",
+  "fallback.probability.somewhatBell": "分布はややベル形になる可能性があり、結果は平均値の周りに集中します。",
+  "fallback.probability.bell": "複数のサイコロを使用すると、確率分布はベルカーブに近づき、平均値に近いロールがはるかに一般的になります。",
+  "fallback.simulation": "シミュレーショングラフは、ロール頻度の視覚的表現を提供します。このフォールバック分析では、理論上の確率に依存しています。"
 }
