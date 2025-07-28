@@ -80,19 +80,29 @@ export function RollForgeClient() {
             // Calculate Distribution Score
             const parsed = parseDiceString(combo.dice);
             const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
+            const variety = parsed.dice.length;
+            const avgSides = parsed.dice.reduce((sum, d) => {
+                if (d.sides === 'F') return sum + 3 * d.count; // Treat Fudge as low-sided
+                return sum + d.sides * d.count;
+            }, 0) / (numDice || 1);
+
 
             let distributionScore = 0;
-            if (numDice > 1) {
-              distributionScore = Math.min(
-                2.0,
-                (numDice - 1) * 0.5 + (parsed.dice.length > 1 ? 0.3 : 0)
-              );
+             if (numDice > 1) {
+                // Base score on number of dice
+                const baseScore = (numDice - 1) * 0.5;
+                // Bonus for variety
+                const varietyBonus = variety > 1 ? 0.3 : 0;
+                // Penalty for high-sided dice (more sides -> flatter distribution)
+                const sidesPenalty = Math.max(0, (avgSides - 8) / 20);
+
+                distributionScore = Math.min(2.0, baseScore + varietyBonus - sidesPenalty);
             }
 
             let distributionShape = 'distribution.flat';
-            if (distributionScore > 1.5) {
+            if (distributionScore > 1.2) {
               distributionShape = 'distribution.bell';
-            } else if (distributionScore > 0.5) {
+            } else if (distributionScore > 0.4) {
               distributionShape = 'distribution.somewhatBell';
             }
 
