@@ -110,7 +110,8 @@ export function CombinationGenerator({
     }
     // A simple simulation just to open the dialog.
     // The dialog will perform the detailed analysis.
-    onSimulate({ dice: manualDice, min: 0, max: 0, average: 0});
+    // We provide dummy values which will be recalculated in the dialog.
+    onSimulate({ dice: manualDice, min: 0, max: 0, average: 0, distributionScore: 0, distributionShape: '', fitScore: 0, fitDescription: '' });
   }
 
 
@@ -224,3 +225,5 @@ export function CombinationGenerator({
     </Card>
   );
 }
+
+    

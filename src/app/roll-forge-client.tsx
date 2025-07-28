@@ -9,6 +9,7 @@ import { generateCombinationsAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/roll-forge/language-switcher';
+import { parseDiceString } from '@/lib/dice-utils';
 
 export function RollForgeClient() {
   const [isPending, startTransition] = useTransition();
@@ -37,10 +38,10 @@ export function RollForgeClient() {
               combo &&
               typeof combo.min === 'number' &&
               typeof combo.max === 'number' &&
-              typeof combo.average === 'number' &&
-              typeof combo.distributionScore === 'number'
+              typeof combo.average === 'number'
           )
           .map((combo) => {
+            // Calculate Fit Score
             const rangeDiff = maxRoll - minRoll;
             const deviation =
               Math.abs(minRoll - combo.min) + Math.abs(maxRoll - combo.max);
@@ -60,13 +61,33 @@ export function RollForgeClient() {
               fitDescription = 'fit.close';
             }
 
+            // Calculate Distribution Score
+            const parsed = parseDiceString(combo.dice);
+            const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
+            
+            let distributionScore = 0;
+            if (numDice > 1) {
+              // A simple heuristic for distribution score
+              distributionScore = Math.min(2.0, (numDice - 1) * 0.5 + (parsed.dice.length > 1 ? 0.3 : 0));
+            }
+
+            let distributionShape = 'distribution.flat';
+            if (distributionScore > 1.5) {
+                distributionShape = 'distribution.bell';
+            } else if (distributionScore > 0.5) {
+                distributionShape = 'distribution.somewhatBell';
+            }
+
+
             return {
               ...combo,
               fitScore,
               fitDescription,
+              distributionScore,
+              distributionShape,
             };
           })
-          .sort((a, b) => b.fitScore - a.fitScore);
+          .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0));
         setCombinations(processedCombinations);
       } else {
         toast({

@@ -27,8 +27,6 @@ const GenerateDiceCombinationsOutputSchema = z.object({
       min: z.number().describe('The minimum possible roll for the combination.'),
       max: z.number().describe('The maximum possible roll for the combination.'),
       average: z.number().describe('The average roll for the combination.'),
-      distributionShape: z.string().describe("A translation key for the shape of the probability distribution (e.g., 'distribution.bell', 'distribution.somewhatBell', 'distribution.flat')."),
-      distributionScore: z.number().describe('A numerical score from 0.0 (flat) to 2.0 (very bell-shaped) indicating the shape of the probability distribution.'),
     })
   ).describe('An array of possible dice combinations that achieve the target range.'),
 });
@@ -64,8 +62,6 @@ For each combination, you must provide:
 2.  **min**: The minimum possible roll.
 3.  **max**: The maximum possible roll.
 4.  **average**: The average roll.
-5.  **distributionShape**: A key describing the probability distribution. Use 'distribution.bell' (for combinations with many dice), 'distribution.somewhatBell' (for 2-3 dice), or 'distribution.flat' (for single dice).
-6.  **distributionScore**: A score from 0.0 (flat) to 2.0 (very bell-shaped). A single die is 0.0. Multiple dice increase the score. 2d6 is about 1.2. 3d6 is about 1.8.
 
 Ensure the min, max, and average values are accurate for each combination.
 `,

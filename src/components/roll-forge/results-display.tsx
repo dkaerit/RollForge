@@ -102,7 +102,9 @@ export function ResultsDisplay({
               <Badge variant="outline">{t('minLabel')}: {combo.min}</Badge>
               <Badge variant="outline">{t('maxLabel')}: {combo.max}</Badge>
               <Badge variant="outline">{t('avgLabel')}: {combo.average.toFixed(2)}</Badge>
-              <Badge variant="secondary" className={cn('gap-1.5', getFitColor(combo.fitScore))}><Ruler className="h-3 w-3" /> {t(combo.fitDescription)} ({combo.fitScore.toFixed(0)}%)</Badge>
+              <Badge variant="secondary" className={cn('gap-1.5', getFitColor(combo.fitScore))}>
+                <Ruler className="h-3 w-3" /> {t(combo.fitDescription)} ({combo.fitScore.toFixed(0)}%)
+              </Badge>
               <Badge
                 variant="outline"
                 className={cn('gap-1.5', getDistributionColor(combo.distributionScore))}
@@ -120,3 +122,5 @@ export function ResultsDisplay({
     </div>
   );
 }
+
+    
