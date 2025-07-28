@@ -40,6 +40,10 @@ export function RollForgeClient() {
     });
   };
 
+  const handleManualSimulate = (combination: DiceCombination) => {
+    setSelectedCombination(combination);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="p-4 sm:p-6 border-b border-border/50 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
@@ -47,7 +51,7 @@ export function RollForgeClient() {
           RollForge
         </h1>
         <p className="text-muted-foreground mt-1">
-          AI-powered dice combination generator & analyzer
+          Generador y analizador de combinaciones de dados con IA
         </p>
       </header>
       <main className="flex-1 p-4 sm:p-6">
@@ -55,6 +59,7 @@ export function RollForgeClient() {
           <div className="lg:col-span-4 xl:col-span-3">
             <CombinationGenerator
               onGenerate={handleGenerate}
+              onSimulate={handleManualSimulate}
               isPending={isPending}
             />
           </div>
@@ -75,7 +80,7 @@ export function RollForgeClient() {
         />
       )}
       <footer className="text-center p-4 text-xs text-muted-foreground border-t border-border/50">
-        Built with Next.js and Genkit.
+        Creado con Next.js y Genkit.
       </footer>
     </div>
   );

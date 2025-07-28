@@ -37,7 +37,12 @@ export function simulateRoll(macro: string): number {
 
   for (const die of dice) {
     for (let i = 0; i < die.count; i++) {
-      total += Math.floor(Math.random() * die.sides) + 1;
+        if (die.sides === 2) {
+            // Special case for d2 to be 0 or 1
+            total += Math.floor(Math.random() * 2);
+        } else {
+            total += Math.floor(Math.random() * die.sides) + 1;
+        }
     }
   }
   return total;
