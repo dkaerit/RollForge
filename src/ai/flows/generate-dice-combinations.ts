@@ -67,8 +67,8 @@ Consider combinations of different dice.
 Be creative in finding dice combinations that meet the minimum and maximum values, and attempt to get as close to the average as possible.
 
 For each combination, also provide:
-1.  **fitDescription**: A translation key describing how well the combination's min/max values match the requested min/max. Use one of the following keys: 'fit.perfect', 'fit.close', 'fit.narrower', 'fit.wider'.
-2.  **fitScore**: A percentage score from 0 to 100 indicating how well the combination fits the target range. A perfect fit is 100%. A wider or narrower range should have a lower score, calculated based on the difference between the requested and actual ranges. For example, if the target is 10-20 (range of 10) and the result is 10-22 (range of 12), the score could be around 10/12 * 100 = 83.
+1.  **fitDescription**: A translation key describing how well the combination's min/max values match the requested min/max. Use one of the following keys: 'fit.perfect', 'fit.close', 'fit.narrower', 'fit.wider'. A perfect fit requires an exact match of min and max.
+2.  **fitScore**: A percentage score from 0 to 100 indicating how well the combination fits the target range. It MUST be calculated precisely. A perfect fit (min and max are identical to the target) is 100. Any deviation from the target min or max MUST result in a lower score. The score is calculated as \`(1 - (|target_min - actual_min| + |target_max - actual_max|) / (target_max - target_min)) * 100\`. The score cannot be negative; if the calculation is less than 0, it should be 0. For example, for a target of 11-32, a combination with min: -3 and max: 32 should have a score of (1 - (|11 - (-3)| + |32-32|) / (32-11)) * 100 = (1 - 14/21)*100 = 33.3.
 3.  **distributionShape**: A translation key describing the probability distribution shape. Use one of the following: 'distribution.bell' (score > 1.5), 'distribution.somewhatBell' (score > 0.5), 'distribution.flat' (otherwise).
 4.  **distributionScore**: A numerical score from 0.0 (flat) to 2.0 (very bell-shaped) representing the distribution shape. It MUST be a decimal value to provide granularity. Do not just use 0.0, 1.0, or 2.0. The more dice in the combination, the higher the score. A single die is always flat (0.0). For example, 2d6 (score ~1.2) is more bell-shaped than 2d4 (score ~0.8). 3d6 should have a very high score (~1.8). Provide a precise decimal value.
 
@@ -88,3 +88,5 @@ const generateDiceCombinationsFlow = ai.defineFlow(
     return output!;
   }
 );
+
+
