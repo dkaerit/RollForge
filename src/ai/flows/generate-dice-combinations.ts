@@ -68,11 +68,7 @@ Be creative in finding dice combinations that meet the minimum and maximum value
 For each combination, also provide:
 1.  **fitDescription**: A translation key describing how well the combination's min/max values match the requested min/max. Use one of the following keys: 'fit.perfect', 'fit.close', 'fit.narrower', 'fit.wider'.
 2.  **distributionShape**: A translation key describing the probability distribution shape. Use one of the following: 'distribution.bell' (score > 1.5), 'distribution.somewhatBell' (score > 0.5), 'distribution.flat' (otherwise).
-3.  **distributionScore**: A numerical score from 0.0 (flat) to 2.0 (very bell-shaped) representing the distribution shape. The more dice, the higher the score. A single die is always flat.
-    *   **2.0**: Very bell-shaped (e.g., 3d6, 4d4). Highly concentrated results.
-    *   **1.0**: Somewhat bell-shaped (e.g., 2d8). Some central tendency.
-    *   **0.0**: Flat (e.g., 1d20). All outcomes are equally likely.
-    Provide a decimal value for more granularity.
+3.  **distributionScore**: A numerical score from 0.0 (flat) to 2.0 (very bell-shaped) representing the distribution shape. It MUST be a decimal value to provide granularity. Do not just use 0.0, 1.0, or 2.0. The more dice in the combination, the higher the score. A single die is always flat (0.0). For example, 2d6 (score ~1.2) is more bell-shaped than 2d4 (score ~0.8). 3d6 should have a very high score (~1.8). Provide a precise decimal value.
 
 Output should be a JSON array. For each element in the array, the dice field should be a textual representation of the dice combination. Example: '1d6+2d4+3' or '2d8-1' or '4dF+10'.
 Dice should be chosen from the list of available dice.
