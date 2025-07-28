@@ -37,6 +37,7 @@ import type { AnalyzeDiceCombinationOutput } from '@/ai/flows/analyze-dice-combi
 import { useToast } from '@/hooks/use-toast';
 import { AnimatedNumber } from './animated-number';
 import { ScrollArea } from '../ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface CombinationAnalysisDialogProps {
   combination: DiceCombination;
