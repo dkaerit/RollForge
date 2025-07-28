@@ -35,12 +35,12 @@ export function ResultsDisplay({
 
   const getDistributionColor = (score: number) => {
     if (score > 1.2) {
-      return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'; // bell-shaped - good
+      return 'bg-red-500/20 text-red-400 border-red-500/30'; // bell-shaped
     }
     if (score > 0.4) {
-      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'; // somewhat bell-shaped - medium
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'; // somewhat bell-shaped
     }
-    return 'bg-red-500/20 text-red-400 border-red-500/30'; // flat - bad
+    return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'; // flat
   };
 
   const getFitColor = (score: number) => {
