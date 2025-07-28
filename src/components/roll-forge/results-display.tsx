@@ -29,16 +29,13 @@ export function ResultsDisplay({
   const { t } = useLanguage();
 
   const getDistributionColor = (score: number) => {
-    switch (score) {
-      case 2:
-        return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'; // Turquoise
-      case 1:
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'; // Yellow
-      case 0:
-        return 'bg-red-500/20 text-red-400 border-red-500/30'; // Red
-      default:
-        return 'bg-secondary text-secondary-foreground';
+    if (score > 1.5) {
+      return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'; // Turquoise
     }
+    if (score > 0.5) {
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'; // Yellow
+    }
+    return 'bg-red-500/20 text-red-400 border-red-500/30'; // Red
   };
 
   if (isPending) {
@@ -102,8 +99,8 @@ export function ResultsDisplay({
                 className={cn('gap-1.5', getDistributionColor(combo.distributionScore))}
               >
                 <BarChart3 className="h-3 w-3" />
-                {t(combo.distributionShape)}: {combo.distributionScore}
-              </Badge>
+                {t(combo.distributionShape)}: {combo.distributionScore.toFixed(2)}
+              </badge>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:inline">
               {t('clickToAnalyze')}
