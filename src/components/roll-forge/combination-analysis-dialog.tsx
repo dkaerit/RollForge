@@ -127,7 +127,7 @@ export function CombinationAnalysisDialog({
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                        backgroundColor: 'hsl(var(--background))',
+                        backgroundColor: 'hsl(var(--card))',
                         borderColor: 'hsl(var(--border))'
                     }}
                   />
