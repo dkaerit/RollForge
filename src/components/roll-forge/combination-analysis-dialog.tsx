@@ -126,7 +126,7 @@ export function CombinationAnalysisDialog({
                   <XAxis dataKey="roll" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <Tooltip
-                    cursor={{ fill: 'hsl(var(--card))' }}
+                    cursor={{ fill: 'hsl(var(--muted))' }}
                     contentStyle={{
                         backgroundColor: 'hsl(var(--background))',
                         borderColor: 'hsl(var(--border))'
