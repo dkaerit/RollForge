@@ -82,8 +82,8 @@ export function RollForgeClient() {
             const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
             const variety = parsed.dice.length;
             const avgSides = parsed.dice.reduce((sum, d) => {
-                if (d.sides === 'F') return sum + 3 * d.count; // Treat Fudge as low-sided
-                if (d.sides === 2) return sum + 2 * d.count; // Treat d2 as low-sided
+                if (d.sides === 'F') return sum + 3 * d.count;
+                if (d.sides === 2) return sum + 2 * d.count;
                 return sum + d.sides * d.count;
             }, 0) / (numDice || 1);
 
@@ -113,31 +113,32 @@ export function RollForgeClient() {
             };
           })
           .sort((a, b) => {
-            // New sorting logic
-            const fitOrder: { [key: string]: number } = {
-                'fit.perfect': 0,
-                'fit.contained': 1,
-                'fit.wider': 2,
-                'fit.exceedsHigh': 2,
-                'fit.exceedsLow': 2,
-                'fit.noOverlap': 3
+            const getSortCategory = (c: DiceCombination) => {
+                if (c.fitScore === 100 && c.distributionShape === 'distribution.flat') return 1;
+                if (c.fitScore >= 80 && c.distributionShape === 'distribution.flat') return 2;
+                if (c.fitScore >= 80 && c.distributionShape === 'distribution.somewhatBell') return 3;
+                if (c.fitScore <= 70 && c.distributionShape === 'distribution.flat') return 4;
+                if (c.fitScore <= 70 && c.distributionShape === 'distribution.somewhatBell') return 5;
+                if (c.fitScore <= 70 && c.distributionShape === 'distribution.bell') return 6;
+                // Fallback for combinations that don't fit the main criteria
+                // This will push intermediate fit scores (70-80) and bell distributions with high fit scores to the end.
+                return 7;
             };
 
-            const orderA = fitOrder[a.fitDescription];
-            const orderB = fitOrder[b.fitDescription];
+            const categoryA = getSortCategory(a);
+            const categoryB = getSortCategory(b);
 
-            if (orderA !== orderB) {
-                return orderA - orderB;
+            if (categoryA !== categoryB) {
+                return categoryA - categoryB;
             }
 
-            // If fit type is the same, sort by fit score (desc)
-            const fitScoreDiff = b.fitScore - a.fitScore;
-            if (fitScoreDiff !== 0) {
-                return fitScoreDiff;
+            // Secondary sorting: higher fit score is better
+            if (b.fitScore !== a.fitScore) {
+                return b.fitScore - a.fitScore;
             }
-
-            // If fit score is also the same, sort by distribution score (desc)
-            return (b.distributionScore ?? 0) - (a.distributionScore ?? 0);
+            
+            // Tertiary sorting: lower distribution score is better (flatter)
+            return a.distributionScore - b.distributionScore;
           });
         setCombinations(processedCombinations);
       } else {
