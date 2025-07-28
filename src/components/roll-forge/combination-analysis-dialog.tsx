@@ -29,6 +29,8 @@ import {
   runSimulation,
   formatSimulationDataForChart,
   simulateRoll,
+  calculateTheoreticalDistribution,
+  parseDiceString,
 } from '@/lib/dice-utils';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -61,8 +63,16 @@ export function CombinationAnalysisDialog({
   const { t, language } = useLanguage();
 
   const chartData = useMemo(() => {
-    const simulationResults = runSimulation(combination.dice, SIMULATION_COUNT);
-    return formatSimulationDataForChart(simulationResults);
+    const parsed = parseDiceString(combination.dice);
+    const isSingleDie = parsed.dice.length === 1 && parsed.dice[0].count === 1 && parsed.dice[0].sides !== 'F';
+
+    let results: Record<number, number>;
+    if (isSingleDie) {
+      results = calculateTheoreticalDistribution(combination.dice, SIMULATION_COUNT);
+    } else {
+      results = runSimulation(combination.dice, SIMULATION_COUNT);
+    }
+    return formatSimulationDataForChart(results);
   }, [combination.dice]);
 
   useEffect(() => {

@@ -63,6 +63,33 @@ export function runSimulation(
   return results;
 }
 
+export function calculateTheoreticalDistribution(
+  macro: string,
+  totalRuns: number
+): Record<number, number> {
+  const { dice, modifier } = parseDiceString(macro);
+  const results: Record<number, number> = {};
+  
+  if (dice.length === 1 && typeof dice[0].sides === 'number') {
+    const sides = dice[0].sides;
+    const isD2 = sides === 2;
+    const runsPerOutcome = totalRuns / (isD2 ? 2 : sides);
+    
+    if (isD2) {
+        // Special case for d2 (0-1)
+        results[0 + modifier] = runsPerOutcome;
+        results[1 + modifier] = runsPerOutcome;
+    } else {
+        for (let i = 1; i <= sides; i++) {
+          const roll = i + modifier;
+          results[roll] = runsPerOutcome;
+        }
+    }
+  }
+  
+  return results;
+}
+
 export function formatSimulationDataForChart(
   data: Record<number, number>
 ): { roll: number; frequency: number }[] {
