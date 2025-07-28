@@ -98,6 +98,26 @@ const D20 = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+const D100 = (props: SVGProps<SVGSVGElement>) => (
+    <svg 
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10Z"/>
+        <path d="M12 2v20"/>
+        <path d="M22 12H2"/>
+        <path d="m20 20-4-4"/>
+        <path d="m4 20 4-4"/>
+        <path d="m4 4 4 4"/>
+        <path d="m20 4-4 4"/>
+    </svg>
+);
+
 const DF = (props: SVGProps<SVGSVGElement>) => (
     <svg
       viewBox="0 0 24 24"
@@ -136,6 +156,8 @@ export function DiceIcon({ sides, ...props }: DiceIconProps) {
       return <D12 {...props} />;
     case 20:
       return <D20 {...props} />;
+    case 100:
+      return <D100 {...props} />;
     default:
       return <D6 {...props} />;
   }

@@ -158,7 +158,9 @@ export function generateFallbackCombinations(
     const stats = getCombinationStats(finalDie);
     combinations.push({
       dice: finalDie,
-      ...stats
+      min: stats.min,
+      max: stats.max,
+      average: stats.average
     });
   }
 
@@ -179,7 +181,9 @@ export function generateFallbackCombinations(
             const stats = getCombinationStats(finalDie);
             combinations.push({
                 dice: finalDie,
-                ...stats
+                min: stats.min,
+                max: stats.max,
+                average: stats.average
             });
         }
     }
