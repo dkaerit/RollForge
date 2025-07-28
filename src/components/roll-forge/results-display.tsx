@@ -11,7 +11,7 @@ import type { DiceCombination } from './types';
 import { Badge } from '@/components/ui/badge';
 import { DiceIcon } from './dice-icon';
 import { useLanguage } from '@/context/language-context';
-import { Ruler, BarChart3, ArrowUpDown, Check } from 'lucide-react';
+import { Ruler, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -19,12 +19,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import type { SortCriterion } from '@/app/roll-forge-client';
 
@@ -37,7 +31,7 @@ interface ResultsDisplayProps {
   onSelect: (combination: DiceCombination) => void;
   isPending: boolean;
   sortCriteria: SortCriterion[];
-  onSortChange: (criteria: SortCriterion[]) => void;
+  onSortChange: (key: SortKev) => void;
 }
 
 export function ResultsDisplay({
@@ -67,27 +61,6 @@ export function ResultsDisplay({
       return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
     }
     return 'bg-red-500/20 text-red-400 border-red-500/30';
-  };
-  
-  const handleSort = (key: SortKev) => {
-    const primaryCriterion = sortCriteria[0];
-    let newCriteria: SortCriterion[];
-
-    if (primaryCriterion.key === key) {
-      // Toggle direction
-      newCriteria = [
-        { ...primaryCriterion, direction: primaryCriterion.direction === 'desc' ? 'asc' : 'desc' },
-        ...sortCriteria.slice(1)
-      ];
-    } else {
-      // Set as new primary, move old primary to secondary
-      const secondaryCriterion = sortCriteria.find(c => c.key !== key);
-      newCriteria = [
-        { key: key, direction: 'desc' },
-        ...(secondaryCriterion ? [secondaryCriterion] : [])
-      ];
-    }
-    onSortChange(newCriteria);
   };
   
   const getSortIndicator = (key: SortKev) => {
@@ -143,32 +116,21 @@ export function ResultsDisplay({
   return (
     <TooltipProvider delayDuration={0}>
       <div className="space-y-4">
-         <div className="flex justify-between items-center">
+         <div className="flex justify-between items-center flex-wrap gap-2">
            <h2 className="text-2xl font-headline text-primary">
             {t('forgedCombinationsTitle')}
           </h2>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <ArrowUpDown className="mr-2 h-4 w-4" />
-                {t('sortByTitle')}
+          <div className="flex gap-2 items-center">
+             <span className='text-sm text-muted-foreground'>{t('sortByTitle')}:</span>
+              <Button variant="outline" size="sm" onClick={() => onSortChange('fitScore')}>
+                 <span>{t('sort.fit')}</span>
+                 {getSortIndicator('fitScore')}
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onSelect={() => handleSort('fitScore')}>
-                 <div className="flex justify-between w-full items-center">
-                   <span>{t('sort.fit')}</span>
-                   {getSortIndicator('fitScore')}
-                 </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleSort('distributionScore')}>
-                 <div className="flex justify-between w-full items-center">
-                   <span>{t('sort.distribution')}</span>
-                   {getSortIndicator('distributionScore')}
-                 </div>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <Button variant="outline" size="sm" onClick={() => onSortChange('distributionScore')}>
+                 <span>{t('sort.distribution')}</span>
+                 {getSortIndicator('distributionScore')}
+              </Button>
+          </div>
         </div>
         {combinations.map((combo, index) => (
           <Card
