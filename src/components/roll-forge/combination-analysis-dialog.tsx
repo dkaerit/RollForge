@@ -64,6 +64,7 @@ export function CombinationAnalysisDialog({
   }, [combination.dice]);
 
   useEffect(() => {
+    let isCancelled = false;
     if (open) {
       setAnalysis(null);
       setSingleRoll(null);
@@ -73,6 +74,9 @@ export function CombinationAnalysisDialog({
           minRange: combination.min,
           maxRange: combination.max,
         });
+
+        if (isCancelled) return;
+        
         if (result) {
           setAnalysis(result);
         } else {
@@ -83,6 +87,9 @@ export function CombinationAnalysisDialog({
           });
         }
       });
+    }
+    return () => {
+      isCancelled = true;
     }
   }, [open, combination, toast]);
   
