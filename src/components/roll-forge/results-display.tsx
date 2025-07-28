@@ -99,7 +99,7 @@ export function ResultsDisplay({
               >
                 <BarChart3 className="h-3 w-3" />
                 {t(combo.distributionShape)}: {combo.distributionScore.toFixed(2)}
-              </badge>
+              </Badge>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:inline">
               {t('clickToAnalyze')}
