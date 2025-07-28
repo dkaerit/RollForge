@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button';
 import type { SortCriterion } from '@/app/roll-forge-client';
 
 
-export type SortKev = 'fitScore' | 'distributionScore';
+export type SortKey = 'fitScore' | 'distributionScore';
 export type SortDirection = 'asc' | 'desc';
 
 interface ResultsDisplayProps {
@@ -31,7 +31,8 @@ interface ResultsDisplayProps {
   onSelect: (combination: DiceCombination) => void;
   isPending: boolean;
   sortCriteria: SortCriterion[];
-  onSortChange: (key: SortKev) => void;
+  onSetSortPriority: (key: SortKey) => void;
+  onToggleSortDirection: (key: SortKey) => void;
 }
 
 export function ResultsDisplay({
@@ -39,7 +40,8 @@ export function ResultsDisplay({
   onSelect,
   isPending,
   sortCriteria,
-  onSortChange,
+  onSetSortPriority,
+  onToggleSortDirection
 }: ResultsDisplayProps) {
   const { t } = useLanguage();
 
@@ -63,7 +65,7 @@ export function ResultsDisplay({
     return 'bg-red-500/20 text-red-400 border-red-500/30';
   };
   
-  const getSortIndicator = (key: SortKev) => {
+  const getSortIndicator = (key: SortKey) => {
     const criterion = sortCriteria.find(c => c.key === key);
     if (!criterion) return null;
     const priority = sortCriteria.findIndex(c => c.key === key) + 1;
@@ -71,7 +73,12 @@ export function ResultsDisplay({
     return (
       <span className='flex items-center gap-1 text-muted-foreground'>
          <span className="text-xs font-mono bg-muted-foreground/20 rounded-full h-4 w-4 flex items-center justify-center">{priority}</span>
-        {criterion.direction === 'desc' ? '▼' : '▲'}
+         <span 
+           className="cursor-pointer hover:text-foreground" 
+           onClick={(e) => { e.stopPropagation(); onToggleSortDirection(key); }}
+         >
+           {criterion.direction === 'desc' ? '▼' : '▲'}
+         </span>
       </span>
     );
   };
@@ -122,11 +129,11 @@ export function ResultsDisplay({
           </h2>
           <div className="flex gap-2 items-center">
              <span className='text-sm text-muted-foreground'>{t('sortByTitle')}:</span>
-              <Button variant="outline" size="sm" onClick={() => onSortChange('fitScore')}>
+              <Button variant="outline" size="sm" onClick={() => onSetSortPriority('fitScore')}>
                  <span>{t('sort.fit')}</span>
                  {getSortIndicator('fitScore')}
               </Button>
-              <Button variant="outline" size="sm" onClick={() => onSortChange('distributionScore')}>
+              <Button variant="outline" size="sm" onClick={() => onSetSortPriority('distributionScore')}>
                  <span>{t('sort.distribution')}</span>
                  {getSortIndicator('distributionScore')}
               </Button>

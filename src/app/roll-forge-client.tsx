@@ -3,7 +3,7 @@
 import { useState, useTransition, useMemo } from 'react';
 import type { DiceCombination } from '@/components/roll-forge/types';
 import { CombinationGenerator } from '@/components/roll-forge/combination-generator';
-import { ResultsDisplay, type SortKev, type SortDirection } from '@/components/roll-forge/results-display';
+import { ResultsDisplay, type SortKey, type SortDirection } from '@/components/roll-forge/results-display';
 import { CombinationAnalysisDialog } from '@/components/roll-forge/combination-analysis-dialog';
 import { generateCombinationsAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -12,7 +12,7 @@ import { LanguageSwitcher } from '@/components/roll-forge/language-switcher';
 import { parseDiceString } from '@/lib/dice-utils';
 
 export type SortCriterion = {
-  key: SortKev;
+  key: SortKey;
   direction: SortDirection;
 };
 
@@ -145,26 +145,23 @@ export function RollForgeClient() {
   const handleManualSimulate = (combination: DiceCombination) => {
     setSelectedCombination(combination);
   };
-  
-    const handleSort = (key: SortKev) => {
-    const primaryCriterion = sortCriteria[0];
-    let newCriteria: SortCriterion[];
 
-    if (primaryCriterion.key === key) {
-      // Toggle direction
-      newCriteria = [
-        { ...primaryCriterion, direction: primaryCriterion.direction === 'desc' ? 'asc' : 'desc' },
-        ...sortCriteria.slice(1)
-      ];
-    } else {
-      // Set as new primary, move old primary to secondary
-      const secondaryCriterion = sortCriteria.find(c => c.key !== key);
-      newCriteria = [
-        { key: key, direction: 'desc' },
-        ...(secondaryCriterion ? [secondaryCriterion] : [])
-      ];
-    }
-    setSortCriteria(newCriteria);
+  const handleSetSortPriority = (key: SortKey) => {
+    setSortCriteria(prev => {
+        const newPrimary = prev.find(c => c.key === key);
+        if (!newPrimary) return prev; // Should not happen
+
+        const otherCriteria = prev.filter(c => c.key !== key);
+        return [newPrimary, ...otherCriteria];
+    });
+  };
+
+  const handleToggleSortDirection = (key: SortKey) => {
+    setSortCriteria(prev => prev.map(c => 
+        c.key === key 
+            ? { ...c, direction: c.direction === 'desc' ? 'asc' : 'desc' } 
+            : c
+    ));
   };
   
   const sortedCombinations = useMemo(() => {
@@ -211,7 +208,8 @@ export function RollForgeClient() {
               onSelect={setSelectedCombination}
               isPending={isPending}
               sortCriteria={sortCriteria}
-              onSortChange={handleSort}
+              onSetSortPriority={handleSetSortPriority}
+              onToggleSortDirection={handleToggleSortDirection}
             />
           </div>
         </div>
