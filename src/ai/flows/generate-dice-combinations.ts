@@ -63,7 +63,7 @@ Ensure that the min, max and average fields are correct.
 
 Be creative in finding dice combinations that meet the minimum and maximum values, and attempt to get as close to the average as possible.
 
-For each combination, also provide:
+For each combination, provide:
 1.  **distributionShape**: A translation key describing the probability distribution shape. Use one of the following: 'distribution.bell' (score > 1.5), 'distribution.somewhatBell' (score > 0.5), 'distribution.flat' (otherwise).
 2.  **distributionScore**: A numerical score from 0.0 (flat) to 2.0 (very bell-shaped) representing the distribution shape. It MUST be a decimal value to provide granularity. Do not just use 0.0, 1.0, or 2.0. The more dice in the combination, the higher the score. A single die is always flat (0.0). For example, 2d6 (score ~1.2) is more bell-shaped than 2d4 (score ~0.8). 3d6 should have a very high score (~1.8). Provide a precise decimal value.
 
