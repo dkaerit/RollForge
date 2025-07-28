@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useMemo } from 'react';
+import { useState, useTransition, useMemo, useCallback } from 'react';
 import type { DiceCombination } from '@/components/roll-forge/types';
 import { CombinationGenerator } from '@/components/roll-forge/combination-generator';
 import { ResultsDisplay, type SortKey, type SortDirection } from '@/components/roll-forge/results-display';
@@ -26,7 +26,7 @@ export function RollForgeClient() {
   const { t } = useLanguage();
   const [sortCriteria, setSortCriteria] = useState<SortCriterion[]>([
     { key: 'fitScore', direction: 'desc' },
-    { key: 'distributionScore', direction: 'desc' },
+    { key: 'distributionScore', direction: 'asc' },
   ]);
 
   const handleGenerate = (
@@ -110,9 +110,7 @@ export function RollForgeClient() {
                 const sidesPenalty = Math.max(0, (avgSides - 8) / 20) * 0.8;
                 distributionScore = Math.max(0, baseScore + varietyBonus - sidesPenalty);
             } else if (numDice === 1) {
-                const sides = parsed.dice[0].sides;
-                const sidesValue = sides === 'F' ? 3 : (sides === 2 ? 2 : sides);
-                distributionScore = -1 / sidesValue; 
+                distributionScore = 0;
             }
             
             let distributionShape = 'distribution.flat';
@@ -146,7 +144,7 @@ export function RollForgeClient() {
     setSelectedCombination(combination);
   };
 
-  const handleSetSortPriority = (key: SortKey) => {
+  const handleSetSortPriority = useCallback((key: SortKey) => {
     setSortCriteria(prev => {
         const newPrimary = prev.find(c => c.key === key);
         if (!newPrimary) return prev; // Should not happen
@@ -154,29 +152,37 @@ export function RollForgeClient() {
         const otherCriteria = prev.filter(c => c.key !== key);
         return [newPrimary, ...otherCriteria];
     });
-  };
+  }, []);
 
-  const handleToggleSortDirection = (key: SortKey) => {
+  const handleToggleSortDirection = useCallback((key: SortKey) => {
     setSortCriteria(prev => prev.map(c => 
         c.key === key 
             ? { ...c, direction: c.direction === 'desc' ? 'asc' : 'desc' } 
             : c
     ));
-  };
+  }, []);
   
   const sortedCombinations = useMemo(() => {
     return [...combinations].sort((a, b) => {
       for (const criterion of sortCriteria) {
         const { key, direction } = criterion;
-        const valA = a[key];
-        const valB = b[key];
+        let valA = a[key];
+        let valB = b[key];
 
-        if (valA < valB) {
-          return direction === 'asc' ? -1 : 1;
+        // For distribution, we want lower scores (flatter) to be "desc" by default.
+        // So we flip the logic if the direction is asc.
+        if (key === 'distributionScore') {
+          if (direction === 'asc') {
+            [valA, valB] = [valB, valA];
+          }
+        } else {
+           if (direction === 'desc') {
+            [valA, valB] = [valB, valA];
+          }
         }
-        if (valA > valB) {
-          return direction === 'asc' ? 1 : -1;
-        }
+
+        if (valA < valB) return -1;
+        if (valA > valB) return 1;
       }
       return 0;
     });
