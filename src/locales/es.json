@@ -62,5 +62,8 @@
   "fallback.probability.flat": "Con un solo dado, la distribución de probabilidad es plana, lo que significa que cada resultado es igualmente probable.",
   "fallback.probability.somewhatBell": "Es probable que la distribución sea algo acampanada, con resultados agrupados alrededor del promedio.",
   "fallback.probability.bell": "Con múltiples dados, la distribución de probabilidad tenderá a una curva de campana, haciendo que las tiradas cercanas al promedio sean mucho más comunes.",
-  "fallback.simulation": "El gráfico de simulación proporciona una representación visual de las frecuencias de las tiradas. Para este análisis de respaldo, nos basamos en probabilidades teóricas."
+  "fallback.simulation": "El gráfico de simulación proporciona una representación visual de las frecuencias de las tiradas. Para este análisis de respaldo, nos basamos en probabilidades teóricas.",
+  "sortByTitle": "Ordenar por",
+  "sort.fit": "Ajuste",
+  "sort.distribution": "Distribución"
 }

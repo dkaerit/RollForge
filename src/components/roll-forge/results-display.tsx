@@ -11,7 +11,7 @@ import type { DiceCombination } from './types';
 import { Badge } from '@/components/ui/badge';
 import { DiceIcon } from './dice-icon';
 import { useLanguage } from '@/context/language-context';
-import { Ruler, BarChart3 } from 'lucide-react';
+import { Ruler, BarChart3, ArrowUpDown, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -19,17 +19,33 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import type { SortCriterion } from '@/app/roll-forge-client';
+
+
+export type SortKev = 'fitScore' | 'distributionScore';
+export type SortDirection = 'asc' | 'desc';
 
 interface ResultsDisplayProps {
   combinations: DiceCombination[];
   onSelect: (combination: DiceCombination) => void;
   isPending: boolean;
+  sortCriteria: SortCriterion[];
+  onSortChange: (criteria: SortCriterion[]) => void;
 }
 
 export function ResultsDisplay({
   combinations,
   onSelect,
   isPending,
+  sortCriteria,
+  onSortChange,
 }: ResultsDisplayProps) {
   const { t } = useLanguage();
 
@@ -52,6 +68,41 @@ export function ResultsDisplay({
     }
     return 'bg-red-500/20 text-red-400 border-red-500/30';
   };
+  
+  const handleSort = (key: SortKev) => {
+    const primaryCriterion = sortCriteria[0];
+    let newCriteria: SortCriterion[];
+
+    if (primaryCriterion.key === key) {
+      // Toggle direction
+      newCriteria = [
+        { ...primaryCriterion, direction: primaryCriterion.direction === 'desc' ? 'asc' : 'desc' },
+        ...sortCriteria.slice(1)
+      ];
+    } else {
+      // Set as new primary, move old primary to secondary
+      const secondaryCriterion = sortCriteria.find(c => c.key !== key);
+      newCriteria = [
+        { key: key, direction: 'desc' },
+        ...(secondaryCriterion ? [secondaryCriterion] : [])
+      ];
+    }
+    onSortChange(newCriteria);
+  };
+  
+  const getSortIndicator = (key: SortKev) => {
+    const criterion = sortCriteria.find(c => c.key === key);
+    if (!criterion) return null;
+    const priority = sortCriteria.findIndex(c => c.key === key) + 1;
+
+    return (
+      <span className='flex items-center gap-1 text-muted-foreground'>
+         <span className="text-xs font-mono bg-muted-foreground/20 rounded-full h-4 w-4 flex items-center justify-center">{priority}</span>
+        {criterion.direction === 'desc' ? '▼' : '▲'}
+      </span>
+    );
+  };
+
 
   if (isPending) {
     return (
@@ -92,9 +143,33 @@ export function ResultsDisplay({
   return (
     <TooltipProvider delayDuration={0}>
       <div className="space-y-4">
-        <h2 className="text-2xl font-headline text-primary">
-          {t('forgedCombinationsTitle')}
-        </h2>
+         <div className="flex justify-between items-center">
+           <h2 className="text-2xl font-headline text-primary">
+            {t('forgedCombinationsTitle')}
+          </h2>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <ArrowUpDown className="mr-2 h-4 w-4" />
+                {t('sortByTitle')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={() => handleSort('fitScore')}>
+                 <div className="flex justify-between w-full items-center">
+                   <span>{t('sort.fit')}</span>
+                   {getSortIndicator('fitScore')}
+                 </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => handleSort('distributionScore')}>
+                 <div className="flex justify-between w-full items-center">
+                   <span>{t('sort.distribution')}</span>
+                   {getSortIndicator('distributionScore')}
+                 </div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         {combinations.map((combo, index) => (
           <Card
             key={index}

@@ -1,15 +1,21 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useMemo } from 'react';
 import type { DiceCombination } from '@/components/roll-forge/types';
 import { CombinationGenerator } from '@/components/roll-forge/combination-generator';
-import { ResultsDisplay } from '@/components/roll-forge/results-display';
+import { ResultsDisplay, type SortKev, type SortDirection } from '@/components/roll-forge/results-display';
 import { CombinationAnalysisDialog } from '@/components/roll-forge/combination-analysis-dialog';
 import { generateCombinationsAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/roll-forge/language-switcher';
 import { parseDiceString } from '@/lib/dice-utils';
+
+export type SortCriterion = {
+  key: SortKev;
+  direction: SortDirection;
+};
+
 
 export function RollForgeClient() {
   const [isPending, startTransition] = useTransition();
@@ -18,6 +24,10 @@ export function RollForgeClient() {
     useState<DiceCombination | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const [sortCriteria, setSortCriteria] = useState<SortCriterion[]>([
+    { key: 'fitScore', direction: 'desc' },
+    { key: 'distributionScore', direction: 'desc' },
+  ]);
 
   const handleGenerate = (
     minRoll: number,
@@ -80,23 +90,31 @@ export function RollForgeClient() {
             // Calculate Distribution Score
             const parsed = parseDiceString(combo.dice);
             const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
-            const variety = parsed.dice.length;
-            const avgSides = parsed.dice.reduce((sum, d) => {
-                if (d.sides === 'F') return sum + 3 * d.count;
-                if (d.sides === 2) return sum + 2 * d.count;
-                return sum + d.sides * d.count;
-            }, 0) / (numDice || 1);
+            const variety = new Set(parsed.dice.map(d => d.sides)).size;
 
-
-            let distributionScore = 0;
-             if (numDice > 1) {
-                const baseScore = (numDice - 1) * 0.5;
-                const varietyBonus = variety > 1 ? 0.3 : 0;
-                const sidesPenalty = Math.max(0, (avgSides - 8) / 20);
-
-                distributionScore = Math.min(2.0, baseScore + varietyBonus - sidesPenalty);
+            let avgSides = 0;
+            if (numDice > 0) {
+                avgSides = parsed.dice.reduce((sum, d) => {
+                    const sides = d.sides === 'F' ? 3 : (d.sides === 2 ? 2 : d.sides);
+                    return sum + (sides * d.count);
+                }, 0) / numDice;
             }
 
+            let distributionScore = 0;
+            if (numDice > 1) {
+                // Base score on number of dice (more dice = more bell-like)
+                const baseScore = Math.log(numDice) * 0.5;
+                // Bonus for variety
+                const varietyBonus = variety > 1 ? 0.3 : 0;
+                // Penalty for high-sided dice (more sides = flatter)
+                const sidesPenalty = Math.max(0, (avgSides - 8) / 20) * 0.4;
+                distributionScore = Math.max(0, baseScore + varietyBonus - sidesPenalty);
+            } else if (numDice === 1) {
+                const sides = parsed.dice[0].sides;
+                const sidesValue = sides === 'F' ? 3 : (sides === 2 ? 2 : sides);
+                distributionScore = -1 / sidesValue; 
+            }
+            
             let distributionShape = 'distribution.flat';
             if (distributionScore > 1.2) {
               distributionShape = 'distribution.bell';
@@ -111,15 +129,6 @@ export function RollForgeClient() {
               distributionScore,
               distributionShape,
             };
-          })
-          .sort((a, b) => {
-            // Primary sorting: higher fit score is better
-            if (b.fitScore !== a.fitScore) {
-                return b.fitScore - a.fitScore;
-            }
-            
-            // Secondary sorting: lower distribution score is better (flatter is preferred)
-            return a.distributionScore - b.distributionScore;
           });
         setCombinations(processedCombinations);
       } else {
@@ -136,6 +145,24 @@ export function RollForgeClient() {
   const handleManualSimulate = (combination: DiceCombination) => {
     setSelectedCombination(combination);
   };
+  
+  const sortedCombinations = useMemo(() => {
+    return [...combinations].sort((a, b) => {
+      for (const criterion of sortCriteria) {
+        const { key, direction } = criterion;
+        const valA = a[key];
+        const valB = b[key];
+
+        if (valA < valB) {
+          return direction === 'asc' ? -1 : 1;
+        }
+        if (valA > valB) {
+          return direction === 'asc' ? 1 : -1;
+        }
+      }
+      return 0;
+    });
+  }, [combinations, sortCriteria]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -159,9 +186,11 @@ export function RollForgeClient() {
           </div>
           <div className="lg:col-span-8 xl:col-span-9">
             <ResultsDisplay
-              combinations={combinations}
+              combinations={sortedCombinations}
               onSelect={setSelectedCombination}
               isPending={isPending}
+              sortCriteria={sortCriteria}
+              onSortChange={setSortCriteria}
             />
           </div>
         </div>

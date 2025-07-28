@@ -62,5 +62,8 @@
   "fallback.probability.flat": "With a single die, the probability distribution is flat, meaning each outcome is equally likely.",
   "fallback.probability.somewhatBell": "The distribution is likely to be somewhat bell-shaped, with results clustering around the average.",
   "fallback.probability.bell": "With multiple dice, the probability distribution will tend towards a bell curve, making rolls near the average much more common.",
-  "fallback.simulation": "The simulation graph provides a visual representation of the roll frequencies. For this fallback analysis, we rely on theoretical probabilities."
+  "fallback.simulation": "The simulation graph provides a visual representation of the roll frequencies. For this fallback analysis, we rely on theoretical probabilities.",
+  "sortByTitle": "Sort by",
+  "sort.fit": "Fit",
+  "sort.distribution": "Distribution"
 }

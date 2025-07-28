@@ -62,5 +62,8 @@
   "fallback.probability.flat": "単一のサイコロを使用する場合、確率分布はフラットであり、各結果が等しく可能性があります。",
   "fallback.probability.somewhatBell": "分布はややベル形になる可能性があり、結果は平均値の周りに集中します。",
   "fallback.probability.bell": "複数のサイコロを使用すると、確率分布はベルカーブに近づき、平均値に近いロールがはるかに一般的になります。",
-  "fallback.simulation": "シミュレーショングラフは、ロール頻度の視覚的表現を提供します。このフォールバック分析では、理論上の確率に依存しています。"
+  "fallback.simulation": "シミュレーショングラフは、ロール頻度の視覚的表現を提供します。このフォールバック分析では、理論上の確率に依存しています。",
+  "sortByTitle": "並べ替え",
+  "sort.fit": "フィット",
+  "sort.distribution": "分布"
 }
