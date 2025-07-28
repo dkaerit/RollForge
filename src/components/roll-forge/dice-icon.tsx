@@ -1,5 +1,19 @@
 import type { SVGProps } from 'react';
 
+const D2 = (props: SVGProps<SVGSVGElement>) => (
+    <svg 
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <circle cx="12" cy="12" r="10" />
+    </svg>
+)
+
 const D4 = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 24 24"
@@ -108,6 +122,8 @@ export function DiceIcon({ sides, ...props }: DiceIconProps) {
   switch (sides) {
     case 0: // For Fudge Dice (dF)
       return <DF {...props} />;
+    case 2:
+      return <D2 {...props} />;
     case 4:
       return <D4 {...props} />;
     case 6:
