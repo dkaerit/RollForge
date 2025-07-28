@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { DiceIcon } from './dice-icon';
 import { useLanguage } from '@/context/language-context';
 import { Ruler, BarChart3 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ResultsDisplayProps {
   combinations: DiceCombination[];
@@ -26,6 +27,19 @@ export function ResultsDisplay({
   isPending,
 }: ResultsDisplayProps) {
   const { t } = useLanguage();
+
+  const getDistributionColor = (score: number) => {
+    switch (score) {
+      case 2:
+        return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'; // Turquoise
+      case 1:
+        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'; // Yellow
+      case 0:
+        return 'bg-red-500/20 text-red-400 border-red-500/30'; // Red
+      default:
+        return 'bg-secondary text-secondary-foreground';
+    }
+  };
 
   if (isPending) {
     return (
@@ -83,7 +97,13 @@ export function ResultsDisplay({
               <Badge variant="outline">{t('maxLabel')}: {combo.max}</Badge>
               <Badge variant="outline">{t('avgLabel')}: {combo.average.toFixed(2)}</Badge>
               <Badge variant="secondary" className="gap-1.5"><Ruler className="h-3 w-3" /> {t(combo.fitDescription)}</Badge>
-              <Badge variant="secondary" className="gap-1.5"><BarChart3 className="h-3 w-3" /> {t(combo.distributionShape)}</Badge>
+              <Badge
+                variant="outline"
+                className={cn('gap-1.5', getDistributionColor(combo.distributionScore))}
+              >
+                <BarChart3 className="h-3 w-3" />
+                {t(combo.distributionShape)}: {combo.distributionScore}
+              </Badge>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:inline">
               {t('clickToAnalyze')}

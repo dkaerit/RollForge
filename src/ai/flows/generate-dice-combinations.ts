@@ -29,6 +29,7 @@ const GenerateDiceCombinationsOutputSchema = z.object({
       average: z.number().describe('The average roll for the combination.'),
       fitDescription: z.string().describe("A translation key for how well the combination's range fits the target range (e.g., 'fit.perfect', 'fit.wider')."),
       distributionShape: z.string().describe("A translation key for the shape of the probability distribution (e.g., 'distribution.bell', 'distribution.flat')."),
+      distributionScore: z.number().describe('A numerical score from 0 (flat) to 2 (very bell-shaped) indicating the shape of the probability distribution.'),
     })
   ).describe('An array of possible dice combinations that achieve the target range.'),
 });
@@ -66,10 +67,11 @@ Be creative in finding dice combinations that meet the minimum and maximum value
 
 For each combination, also provide:
 1.  **fitDescription**: A translation key describing how well the combination's min/max values match the requested min/max. Use one of the following keys: 'fit.perfect', 'fit.close', 'fit.narrower', 'fit.wider'.
-2.  **distributionShape**: A translation key describing the probability distribution shape.
-    *   If the result comes from rolling many dice (e.g., 3d6, 4d4), the distribution is likely bell-shaped. Use 'distribution.bell'.
-    *   If the result comes from a single die (e.g., 1d20), the distribution is flat. Use 'distribution.flat'.
-    *   If it's in between, use 'distribution.somewhatBell'.
+2.  **distributionShape**: A translation key describing the probability distribution shape. Use one of the following: 'distribution.bell', 'distribution.somewhatBell', 'distribution.flat'.
+3.  **distributionScore**: A numerical score from 0 to 2 representing the distribution shape.
+    *   **2**: Very bell-shaped (e.g., 3d6, 4d4). Highly concentrated results.
+    *   **1**: Somewhat bell-shaped (e.g., 2d8). Some central tendency.
+    *   **0**: Flat (e.g., 1d20). All outcomes are equally likely.
 
 Output should be a JSON array. For each element in the array, the dice field should be a textual representation of the dice combination. Example: '1d6+2d4+3' or '2d8-1' or '4dF+10'.
 Dice should be chosen from the list of available dice.

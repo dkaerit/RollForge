@@ -5,4 +5,5 @@ export interface DiceCombination {
   average: number;
   fitDescription: string;
   distributionShape: string;
+  distributionScore: number;
 }
