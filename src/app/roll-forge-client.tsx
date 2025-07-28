@@ -115,7 +115,13 @@ export function RollForgeClient() {
               distributionShape,
             };
           })
-          .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0));
+          .sort((a, b) => {
+            const fitDiff = (b.fitScore ?? 0) - (a.fitScore ?? 0);
+            if (fitDiff !== 0) {
+              return fitDiff;
+            }
+            return (b.distributionScore ?? 0) - (a.distributionScore ?? 0);
+          });
         setCombinations(processedCombinations);
       } else {
         toast({
