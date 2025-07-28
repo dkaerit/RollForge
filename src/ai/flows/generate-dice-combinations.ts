@@ -27,6 +27,8 @@ const GenerateDiceCombinationsOutputSchema = z.object({
       min: z.number().describe('The minimum possible roll for the combination.'),
       max: z.number().describe('The maximum possible roll for the combination.'),
       average: z.number().describe('The average roll for the combination.'),
+      fitDescription: z.string().describe("A description of how well the combination's range fits the target range (e.g., 'Perfect Fit', 'Wider Range')."),
+      distributionShape: z.string().describe("The shape of the probability distribution (e.g., 'Bell-shaped', 'Flat')."),
     })
   ).describe('An array of possible dice combinations that achieve the target range.'),
 });
@@ -61,6 +63,13 @@ Ensure that the min, max and average fields are correct.
 Consider combinations of different dice.
 
 Be creative in finding dice combinations that meet the minimum and maximum values, and attempt to get as close to the average as possible.
+
+For each combination, also provide:
+1.  **fitDescription**: A short, user-friendly description of how well the combination's min/max values match the requested min/max. Examples: "Perfect Fit", "Slightly Narrower Range", "Wider Range", "Close Fit".
+2.  **distributionShape**: A short, user-friendly description of the probability distribution shape.
+    *   If the result comes from rolling many dice (e.g., 3d6, 4d4), the distribution is likely 'Bell-shaped' (concentrated in the center).
+    *   If the result comes from a single die (e.g., 1d20), the distribution is 'Flat' (outcomes are equiprobable).
+    *   If it's in between, you can use terms like 'Somewhat Bell-shaped'.
 
 Output should be a JSON array. For each element in the array, the dice field should be a textual representation of the dice combination. Example: '1d6+2d4+3' or '2d8-1' or '4dF+10'.
 Dice should be chosen from the list of available dice.

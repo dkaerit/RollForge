@@ -12,6 +12,7 @@ import type { DiceCombination } from './types';
 import { Badge } from '@/components/ui/badge';
 import { DiceIcon } from './dice-icon';
 import { useLanguage } from '@/context/language-context';
+import { Ruler, BarChart3 } from 'lucide-react';
 
 interface ResultsDisplayProps {
   combinations: DiceCombination[];
@@ -81,6 +82,8 @@ export function ResultsDisplay({
               <Badge variant="outline">{t('minLabel')}: {combo.min}</Badge>
               <Badge variant="outline">{t('maxLabel')}: {combo.max}</Badge>
               <Badge variant="outline">{t('avgLabel')}: {combo.average.toFixed(2)}</Badge>
+              <Badge variant="secondary" className="gap-1.5"><Ruler className="h-3 w-3" /> {combo.fitDescription}</Badge>
+              <Badge variant="secondary" className="gap-1.5"><BarChart3 className="h-3 w-3" /> {combo.distributionShape}</Badge>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:inline">
               {t('clickToAnalyze')}

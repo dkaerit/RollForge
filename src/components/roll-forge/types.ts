@@ -3,4 +3,6 @@ export interface DiceCombination {
   min: number;
   max: number;
   average: number;
+  fitDescription: string;
+  distributionShape: string;
 }
