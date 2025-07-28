@@ -148,76 +148,70 @@ export function generateFallbackCombinations(
     .map(d => parseInt(d.slice(1), 10))
     .sort((a, b) => a - b);
   
+  const addCombination = (comboStr: string) => {
+     const stats = getCombinationStats(comboStr);
+      combinations.push({
+        dice: comboStr,
+        min: stats.min,
+        max: stats.max,
+        average: stats.average
+      });
+  }
+
   // Simple case: try with one die + modifier
   for (const sides of numericDice) {
     const die = `1d${sides}`;
     const baseAvg = (sides + 1) / 2;
-
     const targetAvg = (minRoll + maxRoll) / 2;
     let modifier = Math.round(targetAvg - baseAvg);
-    let finalDie = `${die}${modifier >= 0 ? '+' : ''}${modifier}`;
+    const comboWithoutD2 = `${die}${modifier === 0 ? '' : (modifier > 0 ? '+' : '') + modifier}`;
     
-    if (hasD2) {
-        const stats = getCombinationStats(finalDie);
-        const maxDiff = maxRoll - stats.max;
-        if (maxDiff > 0) {
-            const d2Count = Math.round(maxDiff);
-            if (d2Count > 0) {
-                finalDie = `${finalDie}+${d2Count}d2`;
-            }
-        }
-    }
+    addCombination(comboWithoutD2);
 
-    const stats = getCombinationStats(finalDie);
-    combinations.push({
-      dice: finalDie,
-      min: stats.min,
-      max: stats.max,
-      average: stats.average
-    });
+    if (hasD2) {
+      const stats = getCombinationStats(comboWithoutD2);
+      const maxDiff = maxRoll - stats.max;
+      if (maxDiff > 0) {
+        const d2Count = Math.round(maxDiff);
+        if (d2Count > 0) {
+          addCombination(`${comboWithoutD2}+${d2Count}d2`);
+        }
+      }
+    }
   }
 
   // Case 2: try with two dice + modifier
   if (numericDice.length > 1) {
     for (let i = 0; i < numericDice.length; i++) {
-        for (let j = i; j < numericDice.length; j++) {
-            const sides1 = numericDice[i];
-            const sides2 = numericDice[j];
-            const die = `1d${sides1}+1d${sides2}`;
-            
-            const baseAvg = ((sides1 + 1) / 2) + ((sides2 + 1) / 2);
-            
-            const targetAvg = (minRoll + maxRoll) / 2;
-            let modifier = Math.round(targetAvg - baseAvg);
-            
-            let finalDie = `${die}${modifier >= 0 ? '+' : ''}${modifier}`;
-            
-            if (hasD2) {
-                const stats = getCombinationStats(finalDie);
-                const maxDiff = maxRoll - stats.max;
-                if (maxDiff > 0) {
-                    const d2Count = Math.round(maxDiff);
-                     if (d2Count > 0) {
-                        finalDie = `${finalDie}+${d2Count}d2`;
-                    }
-                }
-            }
+      for (let j = i; j < numericDice.length; j++) {
+        const sides1 = numericDice[i];
+        const sides2 = numericDice[j];
+        const die = `1d${sides1}+1d${sides2}`;
+        const baseAvg = ((sides1 + 1) / 2) + ((sides2 + 1) / 2);
+        const targetAvg = (minRoll + maxRoll) / 2;
+        let modifier = Math.round(targetAvg - baseAvg);
+        const comboWithoutD2 = `${die}${modifier === 0 ? '' : (modifier > 0 ? '+' : '') + modifier}`;
+        
+        addCombination(comboWithoutD2);
 
-            const stats = getCombinationStats(finalDie);
-            combinations.push({
-                dice: finalDie,
-                min: stats.min,
-                max: stats.max,
-                average: stats.average
-            });
+        if (hasD2) {
+          const stats = getCombinationStats(comboWithoutD2);
+          const maxDiff = maxRoll - stats.max;
+          if (maxDiff > 0) {
+            const d2Count = Math.round(maxDiff);
+            if (d2Count > 0) {
+              addCombination(`${comboWithoutD2}+${d2Count}d2`);
+            }
+          }
         }
+      }
     }
   }
 
   // Remove duplicates and limit to a reasonable number
   const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice.replace(/\+[0]$/, ""), item])).values());
 
-  return { combinations: uniqueCombinations.slice(0, 10) };
+  return { combinations: uniqueCombinations.slice(0, 20) };
 }
 
 // Fallback analysis generator
