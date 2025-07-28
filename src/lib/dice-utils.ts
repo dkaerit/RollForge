@@ -159,9 +159,12 @@ export function generateFallbackCombinations(
     
     if (hasD2) {
         const stats = getCombinationStats(finalDie);
-        const minDiff = minRoll - stats.min;
-        if (minDiff > 0 && minDiff <= 3) {
-            finalDie = `${finalDie}+${minDiff}d2`;
+        const maxDiff = maxRoll - stats.max;
+        if (maxDiff > 0) {
+            const d2Count = Math.round(maxDiff);
+            if (d2Count > 0) {
+                finalDie = `${finalDie}+${d2Count}d2`;
+            }
         }
     }
 
@@ -191,9 +194,12 @@ export function generateFallbackCombinations(
             
             if (hasD2) {
                 const stats = getCombinationStats(finalDie);
-                const minDiff = minRoll - stats.min;
-                if (minDiff > 0 && minDiff <= 3) {
-                    finalDie = `${finalDie}+${minDiff}d2`;
+                const maxDiff = maxRoll - stats.max;
+                if (maxDiff > 0) {
+                    const d2Count = Math.round(maxDiff);
+                     if (d2Count > 0) {
+                        finalDie = `${finalDie}+${d2Count}d2`;
+                    }
                 }
             }
 
@@ -209,10 +215,7 @@ export function generateFallbackCombinations(
   }
 
   // Remove duplicates and limit to a reasonable number
-  const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice.replace(/\+\d+$/, (match) => {
-    const num = parseInt(match.slice(1));
-    return num === 0 ? "" : match;
-  }), item])).values());
+  const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice.replace(/\+[0]$/, ""), item])).values());
 
   return { combinations: uniqueCombinations.slice(0, 10) };
 }
