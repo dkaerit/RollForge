@@ -28,16 +28,17 @@ import type { DiceCombination } from './types';
 import { Separator } from '@/components/ui/separator';
 
 const availableDiceTypes = [2, 4, 6, 8, 10, 12, 20];
+const fudgeDieType = 'dF';
 
 const formSchema = z
   .object({
     minRoll: z.coerce
       .number()
-      .min(1, 'Min roll must be at least 1.')
+      .min(-1000, 'Min roll cannot be less than -1000.')
       .max(1000, 'Min roll cannot exceed 1000.'),
     maxRoll: z.coerce
       .number()
-      .min(1, 'Max roll must be at least 1.')
+      .min(-1000, 'Max roll cannot be less than -1000.')
       .max(1000, 'Max roll cannot exceed 1000.'),
   })
   .refine((data) => data.maxRoll >= data.minRoll, {
@@ -68,6 +69,7 @@ export function CombinationGenerator({
     'd10',
     'd12',
     'd20',
+    'dF'
   ]);
   const [manualDice, setManualDice] = useState('');
   const { toast } = useToast();
@@ -171,6 +173,16 @@ export function CombinationGenerator({
                       </Button>
                     );
                   })}
+                   <Button
+                        key={fudgeDieType}
+                        type="button"
+                        variant={selectedDice.includes(fudgeDieType) ? 'secondary' : 'outline'}
+                        onClick={() => handleToggle(fudgeDieType)}
+                        className="flex items-center justify-center gap-2"
+                      >
+                        <DiceIcon sides={0} className="h-5 w-5" />
+                        dF
+                      </Button>
                 </div>
               </FormItem>
 

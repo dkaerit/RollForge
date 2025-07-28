@@ -1,6 +1,6 @@
 export interface ParsedDice {
   count: number;
-  sides: number;
+  sides: number | 'F';
 }
 
 export interface ParsedMacro {
@@ -12,16 +12,17 @@ export function parseDiceString(macro: string): ParsedMacro {
   const parts = macro.replace(/\s/g, '').split(/(?=[+-])/);
   const result: ParsedMacro = { dice: [], modifier: 0 };
 
-  const dieRegex = /(\d+)d(\d+)/i;
+  const dieRegex = /(\d+)d(\d+|F)/i;
 
   for (const part of parts) {
     const trimmedPart = part.trim();
     const dieMatch = trimmedPart.match(dieRegex);
 
     if (dieMatch) {
+      const sides = dieMatch[2].toUpperCase() === 'F' ? 'F' : parseInt(dieMatch[2], 10);
       result.dice.push({
         count: parseInt(dieMatch[1], 10),
-        sides: parseInt(dieMatch[2], 10),
+        sides: sides,
       });
     } else {
       result.modifier += parseInt(trimmedPart, 10) || 0;
@@ -37,10 +38,12 @@ export function simulateRoll(macro: string): number {
 
   for (const die of dice) {
     for (let i = 0; i < die.count; i++) {
-        if (die.sides === 2) {
+        if (die.sides === 'F') {
+            total += Math.floor(Math.random() * 3) - 1;
+        } else if (die.sides === 2) {
             // Special case for d2 to be 0 or 1
             total += Math.floor(Math.random() * 2);
-        } else {
+        } else if (typeof die.sides === 'number') {
             total += Math.floor(Math.random() * die.sides) + 1;
         }
     }

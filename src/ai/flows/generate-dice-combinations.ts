@@ -14,7 +14,7 @@ import {z} from 'genkit';
 const GenerateDiceCombinationsInputSchema = z.object({
   minRoll: z.number().describe('The minimum roll value for the target range.'),
   maxRoll: z.number().describe('The maximum roll value for the target range.'),
-  availableDice: z.array(z.string()).describe('An array of available dice types (e.g., d4, d6, d8, d10, d12, d20).'),
+  availableDice: z.array(z.string()).describe('An array of available dice types (e.g., d4, d6, d8, d10, d12, d20, dF).'),
 });
 export type GenerateDiceCombinationsInput = z.infer<
   typeof GenerateDiceCombinationsInputSchema
@@ -54,6 +54,7 @@ Available Dice: {{{availableDice}}}
 
 Suggest several dice combinations using the available dice that can achieve the target range.
 The dice 'd2' is special, it rolls a 0 or a 1. This is useful for increasing the maximum roll without affecting the minimum.
+The dice 'dF' is a Fudge die, it rolls -1, 0, or 1. This is useful for creating a wider range of results centered around a base value.
 Also consider using positive and negative modifiers (e.g., +1, -1, -3, -5) to help get closer to the target range.
 Return multiple possible combinations.
 Ensure that the min, max and average fields are correct.
@@ -61,7 +62,7 @@ Consider combinations of different dice.
 
 Be creative in finding dice combinations that meet the minimum and maximum values, and attempt to get as close to the average as possible.
 
-Output should be a JSON array. For each element in the array, the dice field should be a textual representation of the dice combination. Example: '1d6+2d4+3' or '2d8-1'.
+Output should be a JSON array. For each element in the array, the dice field should be a textual representation of the dice combination. Example: '1d6+2d4+3' or '2d8-1' or '4dF+10'.
 Dice should be chosen from the list of available dice.
 `,
 });
