@@ -7,6 +7,8 @@ import { ResultsDisplay } from '@/components/roll-forge/results-display';
 import { CombinationAnalysisDialog } from '@/components/roll-forge/combination-analysis-dialog';
 import { generateCombinationsAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/context/language-context';
+import { LanguageSwitcher } from '@/components/roll-forge/language-switcher';
 
 export function RollForgeClient() {
   const [isPending, startTransition] = useTransition();
@@ -14,6 +16,7 @@ export function RollForgeClient() {
   const [selectedCombination, setSelectedCombination] =
     useState<DiceCombination | null>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleGenerate = (
     minRoll: number,
@@ -31,9 +34,8 @@ export function RollForgeClient() {
       } else {
         toast({
           variant: 'destructive',
-          title: 'Error',
-          description:
-            'Could not generate combinations. Please try again later.',
+          title: t('toastErrorTitle'),
+          description: t('toastErrorDescription'),
         });
         setCombinations([]);
       }
@@ -46,13 +48,14 @@ export function RollForgeClient() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="p-4 sm:p-6 border-b border-border/50 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
-        <h1 className="text-3xl font-headline font-bold text-primary">
-          RollForge
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Generador y analizador de combinaciones de dados con IA
-        </p>
+      <header className="p-4 sm:p-6 border-b border-border/50 sticky top-0 bg-background/80 backdrop-blur-sm z-10 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-headline font-bold text-primary">
+            RollForge
+          </h1>
+          <p className="text-muted-foreground mt-1">{t('appSubtitle')}</p>
+        </div>
+        <LanguageSwitcher />
       </header>
       <main className="flex-1 p-4 sm:p-6">
         <div className="grid lg:grid-cols-12 gap-8">
@@ -80,7 +83,7 @@ export function RollForgeClient() {
         />
       )}
       <footer className="text-center p-4 text-xs text-muted-foreground border-t border-border/50">
-        Creado con Next.js y Genkit.
+        {t('footerText')}
       </footer>
     </div>
   );

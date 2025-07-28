@@ -38,6 +38,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AnimatedNumber } from './animated-number';
 import { ScrollArea } from '../ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useLanguage } from '@/context/language-context';
 
 interface CombinationAnalysisDialogProps {
   combination: DiceCombination;
@@ -57,6 +58,7 @@ export function CombinationAnalysisDialog({
     useState<AnalyzeDiceCombinationOutput | null>(null);
   const [singleRoll, setSingleRoll] = useState<number | null>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const chartData = useMemo(() => {
     const simulationResults = runSimulation(combination.dice, SIMULATION_COUNT);
@@ -82,8 +84,8 @@ export function CombinationAnalysisDialog({
         } else {
           toast({
             variant: 'destructive',
-            title: 'Analysis Failed',
-            description: 'Could not get AI analysis for this combination.',
+            title: t('analysisFailedTitle'),
+            description: t('analysisFailedDescription'),
           });
         }
       });
@@ -91,7 +93,7 @@ export function CombinationAnalysisDialog({
     return () => {
       isCancelled = true;
     }
-  }, [open, combination, toast]);
+  }, [open, combination, toast, t]);
   
   const handleSimulateRoll = () => {
     setSingleRoll(simulateRoll(combination.dice));
@@ -103,28 +105,28 @@ export function CombinationAnalysisDialog({
         <ScrollArea className="h-full pr-6">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl text-primary">
-            Analysis: <span className="font-mono text-accent">{combination.dice}</span>
+            {t('analysisTitle')}: <span className="font-mono text-accent">{combination.dice}</span>
           </DialogTitle>
           <DialogDescription>
-            AI-powered insights and simulated probability for your dice combo.
+            {t('analysisSubtitle')}
           </DialogDescription>
         </DialogHeader>
         <div className="grid md:grid-cols-2 gap-6 mt-4">
           <Card>
             <CardHeader>
-              <CardTitle className="font-headline">Live Simulation</CardTitle>
+              <CardTitle className="font-headline">{t('liveSimulationTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
                 <div className="flex items-center justify-center p-4 rounded-lg bg-background w-full min-h-[80px]">
                     <AnimatedNumber value={singleRoll} />
                 </div>
-                <Button onClick={handleSimulateRoll} className="w-full">Roll the dice!</Button>
+                <Button onClick={handleSimulateRoll} className="w-full">{t('rollTheDice')}</Button>
             </CardContent>
           </Card>
            <Card>
             <CardHeader>
-              <CardTitle className="font-headline">Probability Distribution</CardTitle>
-              <CardDescription>Based on {SIMULATION_COUNT.toLocaleString()} simulated rolls.</CardDescription>
+              <CardTitle className="font-headline">{t('probabilityDistributionTitle')}</CardTitle>
+              <CardDescription>{t('probabilityDistributionSubtitle', { count: SIMULATION_COUNT.toLocaleString() })}</CardDescription>
             </CardHeader>
             <CardContent>
                <ResponsiveContainer width="100%" height={200}>
@@ -146,7 +148,7 @@ export function CombinationAnalysisDialog({
           </Card>
         </div>
          <div className="mt-6">
-            <h3 className="font-headline text-xl text-primary mb-4">AI Analysis</h3>
+            <h3 className="font-headline text-xl text-primary mb-4">{t('aiAnalysisTitle')}</h3>
             {isPending && !analysis ? (
                 <div className="space-y-4">
                     <Skeleton className="h-24 w-full" />
@@ -155,15 +157,15 @@ export function CombinationAnalysisDialog({
             ) : (
                 <div className="space-y-4 text-sm">
                     <Card>
-                        <CardHeader><CardTitle className="font-headline text-lg">Overall Analysis</CardTitle></CardHeader>
+                        <CardHeader><CardTitle className="font-headline text-lg">{t('overallAnalysisTitle')}</CardTitle></CardHeader>
                         <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{analysis?.analysis}</p></CardContent>
                     </Card>
                      <Card>
-                        <CardHeader><CardTitle className="font-headline text-lg">Probability Insights</CardTitle></CardHeader>
+                        <CardHeader><CardTitle className="font-headline text-lg">{t('probabilityInsightsTitle')}</CardTitle></CardHeader>
                         <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{analysis?.probabilityDistribution}</p></CardContent>
                     </Card>
                      <Card>
-                        <CardHeader><CardTitle className="font-headline text-lg">Simulation Analysis</CardTitle></CardHeader>
+                        <CardHeader><CardTitle className="font-headline text-lg">{t('simulationAnalysisTitle')}</CardTitle></CardHeader>
                         <CardContent className="prose prose-sm prose-invert max-w-none text-muted-foreground"><p>{analysis?.simulationResults}</p></CardContent>
                     </Card>
                 </div>

@@ -26,6 +26,7 @@ import { Loader2, Wand2, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { DiceCombination } from './types';
 import { Separator } from '@/components/ui/separator';
+import { useLanguage } from '@/context/language-context';
 
 const availableDiceTypes = [2, 4, 6, 8, 10, 12, 20];
 const fudgeDieType = 'dF';
@@ -73,6 +74,7 @@ export function CombinationGenerator({
   ]);
   const [manualDice, setManualDice] = useState('');
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,8 +91,8 @@ export function CombinationGenerator({
     if (selectedDice.length === 0) {
       toast({
         variant: 'destructive',
-        title: 'No Dice Selected',
-        description: 'Please select at least one die type to generate combinations.',
+        title: t('noDiceSelectedTitle'),
+        description: t('noDiceSelectedDescription'),
       });
       return;
     }
@@ -101,8 +103,8 @@ export function CombinationGenerator({
     if (!manualDice) {
         toast({
             variant: 'destructive',
-            title: 'No Dice Entered',
-            description: 'Please enter a dice combination to simulate.',
+            title: t('noDiceEnteredTitle'),
+            description: t('noDiceEnteredDescription'),
         });
         return;
     }
@@ -115,13 +117,13 @@ export function CombinationGenerator({
   return (
     <Card className="sticky top-24">
       <CardHeader>
-        <CardTitle className="font-headline">Controles</CardTitle>
+        <CardTitle className="font-headline">{t('controlsTitle')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <CardTitle className="font-headline text-lg">Generador IA</CardTitle>
+          <CardTitle className="font-headline text-lg">{t('aiGeneratorTitle')}</CardTitle>
           <CardDescription className="mb-4">
-            Define tu rango de tirada y selecciona los dados disponibles.
+            {t('aiGeneratorDescription')}
           </CardDescription>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -131,7 +133,7 @@ export function CombinationGenerator({
                   name="minRoll"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tirada Mín.</FormLabel>
+                      <FormLabel>{t('minRollLabel')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -144,7 +146,7 @@ export function CombinationGenerator({
                   name="maxRoll"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tirada Máx.</FormLabel>
+                      <FormLabel>{t('maxRollLabel')}</FormLabel>
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
@@ -155,7 +157,7 @@ export function CombinationGenerator({
               </div>
 
               <FormItem>
-                <FormLabel>Dados Disponibles</FormLabel>
+                <FormLabel>{t('availableDiceLabel')}</FormLabel>
                 <div className="grid grid-cols-3 gap-2 pt-2">
                   {availableDiceTypes.map((sides) => {
                     const die = `d${sides}`;
@@ -196,24 +198,24 @@ export function CombinationGenerator({
                 ) : (
                   <Wand2 className="mr-2 h-4 w-4" />
                 )}
-                Forjar Combinaciones
+                {t('forgeCombinationsButton')}
               </Button>
             </form>
           </Form>
         </div>
         <Separator />
         <div>
-            <CardTitle className="font-headline text-lg">Simulador Manual</CardTitle>
+            <CardTitle className="font-headline text-lg">{t('manualSimulatorTitle')}</CardTitle>
             <CardDescription className="mb-4">
-                Ingresa una combinación para analizarla directamente.
+                {t('manualSimulatorDescription')}
             </CardDescription>
             <div className="flex gap-2">
                 <Input
-                    placeholder="Ej: 1d20+2d6+5"
+                    placeholder={t('manualSimulatorPlaceholder')}
                     value={manualDice}
                     onChange={(e) => setManualDice(e.target.value)}
                 />
-                <Button variant="outline" size="icon" onClick={handleManualSimulate} aria-label="Simulate manual dice">
+                <Button variant="outline" size="icon" onClick={handleManualSimulate} aria-label={t('manualSimulatorAriaLabel')}>
                     <Play className="h-4 w-4" />
                 </Button>
             </div>

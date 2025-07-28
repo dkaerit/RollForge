@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { DiceCombination } from './types';
 import { Badge } from '@/components/ui/badge';
 import { DiceIcon } from './dice-icon';
+import { useLanguage } from '@/context/language-context';
 
 interface ResultsDisplayProps {
   combinations: DiceCombination[];
@@ -23,6 +24,8 @@ export function ResultsDisplay({
   onSelect,
   isPending,
 }: ResultsDisplayProps) {
+  const { t } = useLanguage();
+
   if (isPending) {
     return (
       <div className="space-y-4">
@@ -49,9 +52,9 @@ export function ResultsDisplay({
             <DiceIcon sides={12} className="w-12 h-12" />
             <DiceIcon sides={8} className="w-12 h-12" />
         </div>
-        <h2 className="mt-6 text-2xl font-headline">Awaiting Your Command</h2>
+        <h2 className="mt-6 text-2xl font-headline">{t('resultsWaitingTitle')}</h2>
         <p className="mt-2 text-muted-foreground max-w-sm">
-          Use the generator to forge dice combinations. Your results will appear here.
+          {t('resultsWaitingDescription')}
         </p>
       </div>
     );
@@ -60,7 +63,7 @@ export function ResultsDisplay({
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-headline text-primary">
-        Forged Combinations
+        {t('forgedCombinationsTitle')}
       </h2>
       {combinations.map((combo, index) => (
         <Card
@@ -75,12 +78,12 @@ export function ResultsDisplay({
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2 justify-between items-center">
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">Min: {combo.min}</Badge>
-              <Badge variant="outline">Max: {combo.max}</Badge>
-              <Badge variant="outline">Avg: {combo.average.toFixed(2)}</Badge>
+              <Badge variant="outline">{t('minLabel')}: {combo.min}</Badge>
+              <Badge variant="outline">{t('maxLabel')}: {combo.max}</Badge>
+              <Badge variant="outline">{t('avgLabel')}: {combo.average.toFixed(2)}</Badge>
             </div>
             <span className="text-sm text-muted-foreground hidden sm:inline">
-              Click to analyze
+              {t('clickToAnalyze')}
             </span>
           </CardContent>
         </Card>
