@@ -90,11 +90,8 @@ export function RollForgeClient() {
 
             let distributionScore = 0;
              if (numDice > 1) {
-                // Base score on number of dice
                 const baseScore = (numDice - 1) * 0.5;
-                // Bonus for variety
                 const varietyBonus = variety > 1 ? 0.3 : 0;
-                // Penalty for high-sided dice (more sides -> flatter distribution)
                 const sidesPenalty = Math.max(0, (avgSides - 8) / 20);
 
                 distributionScore = Math.min(2.0, baseScore + varietyBonus - sidesPenalty);
@@ -116,10 +113,30 @@ export function RollForgeClient() {
             };
           })
           .sort((a, b) => {
-            const fitDiff = (b.fitScore ?? 0) - (a.fitScore ?? 0);
-            if (fitDiff !== 0) {
-              return fitDiff;
+            // New sorting logic
+            const fitOrder: { [key: string]: number } = {
+                'fit.perfect': 0,
+                'fit.contained': 1,
+                'fit.wider': 2,
+                'fit.exceedsHigh': 2,
+                'fit.exceedsLow': 2,
+                'fit.noOverlap': 3
+            };
+
+            const orderA = fitOrder[a.fitDescription];
+            const orderB = fitOrder[b.fitDescription];
+
+            if (orderA !== orderB) {
+                return orderA - orderB;
             }
+
+            // If fit type is the same, sort by fit score (desc)
+            const fitScoreDiff = b.fitScore - a.fitScore;
+            if (fitScoreDiff !== 0) {
+                return fitScoreDiff;
+            }
+
+            // If fit score is also the same, sort by distribution score (desc)
             return (b.distributionScore ?? 0) - (a.distributionScore ?? 0);
           });
         setCombinations(processedCombinations);
