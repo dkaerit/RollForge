@@ -38,5 +38,12 @@
   "noDiceEnteredTitle": "No Dice Entered",
   "noDiceEnteredDescription": "Please enter a dice combination to simulate.",
   "toggleLanguage": "Toggle language",
-  "languageLabel": "Language"
+  "languageLabel": "Language",
+  "fit.perfect": "Perfect Fit",
+  "fit.close": "Close Fit",
+  "fit.narrower": "Narrower Range",
+  "fit.wider": "Wider Range",
+  "distribution.bell": "Bell-shaped",
+  "distribution.somewhatBell": "Somewhat Bell-shaped",
+  "distribution.flat": "Flat"
 }

@@ -38,5 +38,12 @@
   "noDiceEnteredTitle": "サイコロが入力されていません",
   "noDiceEnteredDescription": "シミュレートするサイコロの組み合わせを入力してください。",
   "toggleLanguage": "言語を切り替える",
-  "languageLabel": "言語"
+  "languageLabel": "言語",
+  "fit.perfect": "完全一致",
+  "fit.close": "近似一致",
+  "fit.narrower": "狭い範囲",
+  "fit.wider": "広い範囲",
+  "distribution.bell": "ベル形",
+  "distribution.somewhatBell": "ややベル形",
+  "distribution.flat": "フラット"
 }

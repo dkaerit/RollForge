@@ -38,5 +38,12 @@
   "noDiceEnteredTitle": "Не Введена Комбинация",
   "noDiceEnteredDescription": "Пожалуйста, введите комбинацию костей для симуляции.",
   "toggleLanguage": "Переключить язык",
-  "languageLabel": "Язык"
+  "languageLabel": "Язык",
+  "fit.perfect": "Идеальное Совпадение",
+  "fit.close": "Близкое Совпадение",
+  "fit.narrower": "Узкий Диапазон",
+  "fit.wider": "Широкий Диапазон",
+  "distribution.bell": "Колоколообразное",
+  "distribution.somewhatBell": "Слегка Колоколообразное",
+  "distribution.flat": "Плоское"
 }

@@ -38,5 +38,12 @@
   "noDiceEnteredTitle": "Aucun Dé Entré",
   "noDiceEnteredDescription": "Veuillez entrer une combinaison de dés à simuler.",
   "toggleLanguage": "Changer de langue",
-  "languageLabel": "Langue"
+  "languageLabel": "Langue",
+  "fit.perfect": "Ajustement Parfait",
+  "fit.close": "Ajustement Proche",
+  "fit.narrower": "Plage Étroite",
+  "fit.wider": "Plage Large",
+  "distribution.bell": "En Cloche",
+  "distribution.somewhatBell": "Partiellement en Cloche",
+  "distribution.flat": "Plate"
 }
