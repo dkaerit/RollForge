@@ -58,7 +58,7 @@ export function CombinationAnalysisDialog({
     useState<AnalyzeDiceCombinationOutput | null>(null);
   const [singleRoll, setSingleRoll] = useState<number | null>(null);
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const chartData = useMemo(() => {
     const simulationResults = runSimulation(combination.dice, SIMULATION_COUNT);
@@ -75,6 +75,7 @@ export function CombinationAnalysisDialog({
           diceCombination: combination.dice,
           minRange: combination.min,
           maxRange: combination.max,
+          language: language,
         });
 
         if (isCancelled) return;
@@ -93,7 +94,7 @@ export function CombinationAnalysisDialog({
     return () => {
       isCancelled = true;
     }
-  }, [open, combination, toast, t]);
+  }, [open, combination, toast, t, language]);
   
   const handleSimulateRoll = () => {
     setSingleRoll(simulateRoll(combination.dice));

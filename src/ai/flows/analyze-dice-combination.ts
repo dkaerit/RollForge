@@ -23,6 +23,7 @@ const AnalyzeDiceCombinationInputSchema = z.object({
     .number()
     .optional()
     .describe('The maximum target number the dice combination should achieve.'),
+  language: z.string().describe('The language to use for the analysis.'),
 });
 export type AnalyzeDiceCombinationInput = z.infer<
   typeof AnalyzeDiceCombinationInputSchema
@@ -61,7 +62,9 @@ const analyzeDiceCombinationPrompt = ai.definePrompt({
   output: {schema: AnalyzeDiceCombinationOutputSchema},
   prompt: `You are a game design expert, especially skilled in designing and balancing game mechanics with dice.
 
-You will analyze the dice combination provided, and provide an analysis of the probability distribution, mean, standard deviation, and suitability for achieving the target range.  Also simulate the dice combination and provide the results.
+You will analyze the dice combination provided, and provide an analysis of the probability distribution, mean, standard deviation, and suitability for achieving the target range. Also simulate the dice combination and provide the results.
+
+All your output text MUST be in the following language: {{{language}}}
 
 Dice Combination: {{{diceCombination}}}
 Min Range: {{{minRange}}}
