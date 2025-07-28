@@ -60,7 +60,6 @@ The dice 'dF' is a Fudge die, it rolls -1, 0, or 1. This is useful for creating 
 Also consider using positive and negative modifiers (e.g., +1, -1, -3, -5) to help get closer to the target range.
 Return multiple possible combinations.
 Ensure that the min, max and average fields are correct.
-Consider combinations of different dice.
 
 Be creative in finding dice combinations that meet the minimum and maximum values, and attempt to get as close to the average as possible.
 
