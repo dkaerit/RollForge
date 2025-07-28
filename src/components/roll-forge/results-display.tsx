@@ -141,12 +141,12 @@ export function ResultsDisplay({
                       )}
                     >
                       <BarChart3 className="h-3 w-3" />
-                      {t(combo.distributionShape)}
+                      {t(combo.distributionShape)} (
+                      {combo.distributionScore.toFixed(2)})
                     </Badge>
                   </TooltipTrigger>
-                   <TooltipContent>
+                  <TooltipContent>
                     <p>{t(`${combo.distributionShape}.tooltip`)}</p>
-                    <p className="text-xs text-muted-foreground">{t('distributionScoreLabel')}: {combo.distributionScore.toFixed(2)}</p>
                   </TooltipContent>
                 </Tooltip>
               </div>
