@@ -40,9 +40,11 @@
   "toggleLanguage": "Cambiar idioma",
   "languageLabel": "Idioma",
   "fit.perfect": "Ajuste Perfecto",
-  "fit.close": "Ajuste Cercano",
-  "fit.narrower": "Dentro del Rango",
+  "fit.contained": "Contenido en Rango",
   "fit.wider": "Rango Amplio",
+  "fit.exceedsLow": "Excede por Debajo",
+  "fit.exceedsHigh": "Excede por Arriba",
+  "fit.noOverlap": "Sin Solapamiento",
   "distribution.bell": "Acampanada",
   "distribution.somewhatBell": "Algo Acampanada",
   "distribution.flat": "Plana"

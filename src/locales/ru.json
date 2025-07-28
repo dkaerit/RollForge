@@ -40,9 +40,11 @@
   "toggleLanguage": "Переключить язык",
   "languageLabel": "Язык",
   "fit.perfect": "Идеальное Совпадение",
-  "fit.close": "Близкое Совпадение",
-  "fit.narrower": "Внутри Диапазона",
+  "fit.contained": "Внутри Диапазона",
   "fit.wider": "Широкий Диапазон",
+  "fit.exceedsLow": "Выходит за Нижнюю Границу",
+  "fit.exceedsHigh": "Выходит за Верхнюю Границу",
+  "fit.noOverlap": "Нет Пересечения",
   "distribution.bell": "Колоколообразное",
   "distribution.somewhatBell": "Слегка Колоколообразное",
   "distribution.flat": "Плоское"

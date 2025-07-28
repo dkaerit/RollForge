@@ -40,9 +40,11 @@
   "toggleLanguage": "Toggle language",
   "languageLabel": "Language",
   "fit.perfect": "Perfect Fit",
-  "fit.close": "Close Fit",
-  "fit.narrower": "Inside Range",
+  "fit.contained": "Contained in Range",
   "fit.wider": "Wider Range",
+  "fit.exceedsLow": "Exceeds Below",
+  "fit.exceedsHigh": "Exceeds Above",
+  "fit.noOverlap": "No Overlap",
   "distribution.bell": "Bell-shaped",
   "distribution.somewhatBell": "Somewhat Bell-shaped",
   "distribution.flat": "Flat"

@@ -41,7 +41,7 @@ export function RollForgeClient() {
               typeof combo.average === 'number'
           )
           .map((combo) => {
-            // Calculate Fit Score
+            // Calculate Fit Score & Description
             const rangeDiff = maxRoll - minRoll;
             const deviation =
               Math.abs(minRoll - combo.min) + Math.abs(maxRoll - combo.max);
@@ -52,32 +52,47 @@ export function RollForgeClient() {
               fitScore = 100;
             }
 
-            let fitDescription = 'fit.wider';
-            if (combo.min === minRoll && combo.max === maxRoll) {
-              fitDescription = 'fit.perfect';
-            } else if (combo.min >= minRoll && combo.max <= maxRoll) {
-              fitDescription = 'fit.narrower';
-            } else if (fitScore > 80) {
-              fitDescription = 'fit.close';
+            let fitDescription = 'fit.noOverlap';
+            const comboMin = combo.min;
+            const comboMax = combo.max;
+
+            const isContained = comboMin >= minRoll && comboMax <= maxRoll;
+            const isWider = comboMin < minRoll && comboMax > maxRoll;
+            const isDisplacedLow = comboMin < minRoll && comboMax >= minRoll && comboMax <= maxRoll;
+            const isDisplacedHigh = comboMin >= minRoll && comboMin <= maxRoll && comboMax > maxRoll;
+
+            if (comboMin === minRoll && comboMax === maxRoll) {
+                fitDescription = 'fit.perfect';
+            } else if (isContained) {
+                fitDescription = 'fit.contained';
+            } else if (isWider) {
+                fitDescription = 'fit.wider';
+            } else if (isDisplacedLow) {
+                fitDescription = 'fit.exceedsLow';
+            } else if (isDisplacedHigh) {
+                fitDescription = 'fit.exceedsHigh';
+            } else {
+                fitDescription = 'fit.noOverlap';
             }
 
             // Calculate Distribution Score
             const parsed = parseDiceString(combo.dice);
             const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
-            
+
             let distributionScore = 0;
             if (numDice > 1) {
-              // A simple heuristic for distribution score
-              distributionScore = Math.min(2.0, (numDice - 1) * 0.5 + (parsed.dice.length > 1 ? 0.3 : 0));
+              distributionScore = Math.min(
+                2.0,
+                (numDice - 1) * 0.5 + (parsed.dice.length > 1 ? 0.3 : 0)
+              );
             }
 
             let distributionShape = 'distribution.flat';
             if (distributionScore > 1.5) {
-                distributionShape = 'distribution.bell';
+              distributionShape = 'distribution.bell';
             } else if (distributionScore > 0.5) {
-                distributionShape = 'distribution.somewhatBell';
+              distributionShape = 'distribution.somewhatBell';
             }
-
 
             return {
               ...combo,
