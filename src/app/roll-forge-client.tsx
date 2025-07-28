@@ -83,6 +83,7 @@ export function RollForgeClient() {
             const variety = parsed.dice.length;
             const avgSides = parsed.dice.reduce((sum, d) => {
                 if (d.sides === 'F') return sum + 3 * d.count; // Treat Fudge as low-sided
+                if (d.sides === 2) return sum + 2 * d.count; // Treat d2 as low-sided
                 return sum + d.sides * d.count;
             }, 0) / (numDice || 1);
 

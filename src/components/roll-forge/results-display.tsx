@@ -34,13 +34,13 @@ export function ResultsDisplay({
   const { t } = useLanguage();
 
   const getDistributionColor = (score: number) => {
-    if (score > 1.5) {
-      return 'bg-red-500/20 text-red-400 border-red-500/30';
+    if (score > 1.2) {
+      return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'; // bell-shaped - good
     }
-    if (score > 0.5) {
-      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+    if (score > 0.4) {
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'; // somewhat bell-shaped - medium
     }
-    return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
+    return 'bg-red-500/20 text-red-400 border-red-500/30'; // flat - bad
   };
 
   const getFitColor = (score: number) => {
