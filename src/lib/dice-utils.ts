@@ -18,6 +18,17 @@ export interface ParsedMacro {
   modifier: number;
 }
 
+export interface IndividualRoll {
+    sides: number | 'F';
+    result: number;
+}
+
+export interface SimulationResult {
+    total: number;
+    individualRolls: IndividualRoll[];
+    modifier: number;
+}
+
 export function parseDiceString(macro: string): ParsedMacro {
   const parts = macro.replace(/\s/g, '').split(/(?=[+-])/);
   const result: ParsedMacro = { dice: [], modifier: 0 };
@@ -69,23 +80,27 @@ export function getCombinationStats(macro: string): { min: number, max: number, 
 }
 
 
-export function simulateRoll(macro: string): number {
+export function simulateRoll(macro: string): SimulationResult {
   const { dice, modifier } = parseDiceString(macro);
   let total = modifier;
+  const individualRolls: IndividualRoll[] = [];
 
   for (const die of dice) {
     for (let i = 0; i < die.count; i++) {
+        let result = 0;
         if (die.sides === 'F') {
-            total += Math.floor(Math.random() * 3) - 1;
+            result = Math.floor(Math.random() * 3) - 1;
         } else if (die.sides === 2) {
             // Special case for d2 to be 0 or 1
-            total += Math.floor(Math.random() * 2);
+            result = Math.floor(Math.random() * 2);
         } else if (typeof die.sides === 'number') {
-            total += Math.floor(Math.random() * die.sides) + 1;
+            result = Math.floor(Math.random() * die.sides) + 1;
         }
+        total += result;
+        individualRolls.push({ sides: die.sides, result });
     }
   }
-  return total;
+  return { total, individualRolls, modifier };
 }
 
 export function runSimulation(
@@ -94,7 +109,7 @@ export function runSimulation(
 ): Record<number, number> {
   const results: Record<number, number> = {};
   for (let i = 0; i < times; i++) {
-    const roll = simulateRoll(macro);
+    const roll = simulateRoll(macro).total;
     results[roll] = (results[roll] || 0) + 1;
   }
   return results;

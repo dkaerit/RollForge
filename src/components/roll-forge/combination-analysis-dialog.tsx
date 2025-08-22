@@ -32,6 +32,7 @@ import {
   calculateTheoreticalDistribution,
   parseDiceString,
   getCombinationStats,
+  type SimulationResult,
 } from '@/lib/dice-utils';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -42,6 +43,8 @@ import { AnimatedNumber } from './animated-number';
 import { ScrollArea } from '../ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/context/language-context';
+import { DiceIcon } from '../ui/dice-icon';
+import { Separator } from '../ui/separator';
 
 interface CombinationAnalysisDialogProps {
   combination: DiceCombination;
@@ -59,7 +62,7 @@ export function CombinationAnalysisDialog({
   const [isPending, startTransition] = useTransition();
   const [analysis, setAnalysis] =
     useState<AnalyzeDiceCombinationOutput | null>(null);
-  const [singleRoll, setSingleRoll] = useState<number | null>(null);
+  const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const { toast } = useToast();
   const { t, language } = useLanguage();
 
@@ -80,7 +83,7 @@ export function CombinationAnalysisDialog({
     let isCancelled = false;
     if (open) {
       setAnalysis(null);
-      setSingleRoll(null);
+      setSimulationResult(null);
       startTransition(async () => {
         const result = await analyzeCombinationAction({
           diceCombination: combination.dice,
@@ -106,7 +109,7 @@ export function CombinationAnalysisDialog({
   }, [open, combination, toast, t, language]);
   
   const handleSimulateRoll = () => {
-    setSingleRoll(simulateRoll(combination.dice));
+    setSimulationResult(simulateRoll(combination.dice));
   };
   
   const translatedAnalysis = useMemo(() => {
@@ -145,9 +148,29 @@ export function CombinationAnalysisDialog({
               <CardTitle className="font-headline">{t('liveSimulationTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
-                <div className="flex items-center justify-center p-4 rounded-lg bg-background w-full min-h-[80px]">
-                    <AnimatedNumber value={singleRoll} />
-                </div>
+               <div className="grid grid-cols-2 gap-4 w-full">
+                  <div className="flex flex-col gap-2 items-center justify-center p-2 rounded-lg bg-background w-full min-h-[80px]">
+                      {simulationResult && (
+                         <div className="flex flex-col gap-2 text-sm w-full font-mono">
+                           {simulationResult.individualRolls.map((roll, index) => (
+                              <div key={index} className="flex items-center gap-2">
+                                <DiceIcon sides={typeof roll.sides === 'number' ? roll.sides : 0} className="w-5 h-5 text-accent" />
+                                <span>{roll.result}</span>
+                              </div>
+                           ))}
+                            {simulationResult.modifier !== 0 && (
+                                <div className="flex items-center gap-2">
+                                    <span className="w-5 h-5 flex items-center justify-center text-accent">#</span>
+                                    <span>{simulationResult.modifier}</span>
+                                </div>
+                            )}
+                         </div>
+                      )}
+                  </div>
+                  <div className="flex items-center justify-center p-4 rounded-lg bg-background w-full min-h-[80px]">
+                    <AnimatedNumber value={simulationResult?.total ?? null} />
+                  </div>
+               </div>
                 <Button onClick={handleSimulateRoll} className="w-full">{t('rollTheDice')}</Button>
             </CardContent>
           </Card>
