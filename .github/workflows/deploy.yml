@@ -29,7 +29,7 @@ jobs:
           NEXT_PUBLIC_ASSET_PREFIX: /RollForge/ # Replace with your repository name if different
 
       - name: Export static site
-        run: next export # Assuming you have an "export" script in your package.json for static export
+        run: npx next export # Assuming you have an "export" script in your package.json for static export
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
