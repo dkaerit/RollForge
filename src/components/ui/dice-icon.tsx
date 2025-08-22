@@ -122,16 +122,19 @@ const D100 = (props: SVGProps<SVGSVGElement>) => (
 const DF = (props: SVGProps<SVGSVGElement>) => (
     <svg
       viewBox="0 0 24 24"
-      fill="none"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
     >
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <path d="M9 9h4c1.1 0 2 .9 2 2v0c0 1.1-.9 2-2 2H9V9z" />
-      <path d="M9 9v6" />
+      <path d="M18 2H6C3.79086 2 2 3.79086 2 6V18C2 20.2091 3.79086 22 6 22H18C20.2091 22 22 20.2091 22 18V6C22 3.79086 20.2091 2 18 2Z" 
+      fill="currentColor"
+      stroke="none"
+      className="text-muted-foreground/30"
+      />
+      <path d="M12 7V17" stroke="hsl(var(--background))" />
+      <path d="M7 12H17" stroke="hsl(var(--background))" />
     </svg>
   );
 
