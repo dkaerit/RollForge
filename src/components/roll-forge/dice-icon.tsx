@@ -1,75 +1,5 @@
 import type { SVGProps } from 'react';
-
-const D2 = (props: SVGProps<SVGSVGElement>) => (
-    <svg 
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        {...props}
-    >
-        <path d="M3 10h18" />
-        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z" />
-    </svg>
-)
-
-const D4 = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M12 2 2 21h20L12 2z" />
-  </svg>
-);
-
-const D6 = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-  </svg>
-);
-
-const D8 = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="m12 2 10 10-10 10-10-10L12 2z" />
-  </svg>
-);
-
-const D10 = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M12 2 3 10l9 12 9-12-9-8z" />
-  </svg>
-);
+import Image from 'next/image';
 
 const D12 = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -82,20 +12,6 @@ const D12 = (props: SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path d="M12 2.5 21.5 9.5 17 21.5 7 21.5 2.5 9.5Z" />
-  </svg>
-);
-
-const D20 = (props: SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M12 2 6.5 7 2 12l4.5 5L12 22l5.5-5 4.5-5-4.5-5L12 2z" />
   </svg>
 );
 
@@ -135,31 +51,58 @@ const DF = (props: SVGProps<SVGSVGElement>) => (
     </svg>
   );
 
-interface DiceIconProps extends SVGProps<SVGSVGElement> {
-  sides: number;
+const imageUrls: Record<number, string> = {
+    2: 'https://i.imgur.com/ThNplfp.png',
+    4: 'https://i.imgur.com/73h49tp.png',
+    6: 'https://i.imgur.com/dkGJq1L.png',
+    8: 'https://i.imgur.com/jwo6kIg.png',
+    10: 'https://i.imgur.com/RAIzuDQ.png',
+    20: 'https://i.imgur.com/QcuW5V7.png',
 }
 
-export function DiceIcon({ sides, ...props }: DiceIconProps) {
+interface DiceIconProps extends Omit<SVGProps<SVGSVGElement>, 'width' | 'height'> {
+  sides: number;
+  width?: number;
+  height?: number;
+}
+
+export function DiceIcon({ sides, className, width = 20, height = 20, ...props }: DiceIconProps) {
+  const imageUrl = imageUrls[sides];
+
+  if (imageUrl) {
+    return (
+        <Image
+            src={imageUrl}
+            alt={`d${sides}`}
+            width={width}
+            height={height}
+            className={className}
+            unoptimized
+        />
+    )
+  }
+  
+  // Fallback to SVG for dice without custom images
   switch (sides) {
     case 0: // For Fudge Dice (dF)
-      return <DF {...props} />;
-    case 2:
-      return <D2 {...props} />;
-    case 4:
-      return <D4 {...props} />;
-    case 6:
-      return <D6 {...props} />;
-    case 8:
-      return <D8 {...props} />;
-    case 10:
-      return <D10 {...props} />;
+      return <DF {...props} className={className} />;
     case 12:
-      return <D12 {...props} />;
-    case 20:
-      return <D20 {...props} />;
+      return <D12 {...props} className={className} />;
     case 100:
-      return <D100 {...props} />;
+      return <D100 {...props} className={className} />;
     default:
-      return <D6 {...props} />;
+      // Default to d6 SVG if no image and no specific SVG
+      return <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+        {...props}
+        >
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    </svg>;
   }
 }
