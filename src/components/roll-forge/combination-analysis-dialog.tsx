@@ -157,23 +157,28 @@ export function CombinationAnalysisDialog({
                <div className="grid grid-cols-2 gap-4 w-full">
                   <div className="flex flex-col gap-2 items-center justify-center p-2 rounded-lg bg-background w-full min-h-[80px]">
                       {simulationResult && (
-                         <div className="flex flex-wrap items-center gap-2 text-sm font-mono">
+                         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm font-mono">
                            {simulationResult.individualRolls.map((roll, index) => (
-                                <Tooltip key={index}>
-                                  <TooltipTrigger asChild>
-                                    <div className="flex items-center gap-2 bg-muted p-1 rounded-md">
-                                        <DiceIcon sides={typeof roll.sides === 'number' ? roll.sides : 0} className="w-5 h-5" />
-                                        <span>{roll.result}</span>
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>d{roll.sides}</p>
-                                  </TooltipContent>
-                                </Tooltip>
+                                <div key={index} className='flex items-center gap-1.5'>
+                                    {index > 0 || roll.sign < 0 ? (
+                                        roll.sign > 0 ? <Plus className="w-3 h-3 text-muted-foreground" /> : <Minus className="w-3 h-3 text-muted-foreground" />
+                                    ) : <div className="w-3 h-3"></div>}
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <div className="flex items-center gap-2 bg-muted p-1 rounded-md">
+                                            <DiceIcon sides={typeof roll.sides === 'number' ? roll.sides : 0} className="w-5 h-5" />
+                                            <span>{roll.result}</span>
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>{(roll.sign > 0 ? '+' : '-')}d{roll.sides}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                </div>
                             ))}
                             {simulationResult.modifier !== 0 && (
-                                <div className="flex items-center gap-2 p-1 text-lg">
-                                    {simulationResult.modifier > 0 ? <Plus className="w-4 h-4 text-accent" /> : <Minus className="w-4 h-4 text-accent" />}
+                                <div className="flex items-center gap-1.5 text-lg">
+                                    {simulationResult.modifier > 0 ? <Plus className="w-4 h-4 text-muted-foreground" /> : <Minus className="w-4 h-4 text-muted-foreground" />}
                                     <span className='font-bold'>{Math.abs(simulationResult.modifier)}</span>
                                 </div>
                             )}

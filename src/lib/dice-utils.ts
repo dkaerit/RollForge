@@ -11,6 +11,7 @@ import type {
 export interface ParsedDice {
   count: number;
   sides: number | 'F';
+  sign: 1 | -1;
 }
 
 export interface ParsedMacro {
@@ -21,6 +22,7 @@ export interface ParsedMacro {
 export interface IndividualRoll {
     sides: number | 'F';
     result: number;
+    sign: 1 | -1;
 }
 
 export interface SimulationResult {
@@ -30,24 +32,29 @@ export interface SimulationResult {
 }
 
 export function parseDiceString(macro: string): ParsedMacro {
-  const parts = macro.replace(/\s/g, '').split(/(?=[+-])/);
+  const normalizedMacro = macro.replace(/\s/g, '').replace(/^-/, '-1*');
+  const parts = normalizedMacro.split(/(?=[+-])/);
   const result: ParsedMacro = { dice: [], modifier: 0 };
 
   const dieRegex = /(\d*)d(\d+|F)/i;
 
   for (const part of parts) {
     const trimmedPart = part.trim();
-    const dieMatch = trimmedPart.match(dieRegex);
+    const sign: 1 | -1 = trimmedPart.startsWith('-') ? -1 : 1;
+    const partWithoutSign = trimmedPart.replace(/^[+-]/, '');
+
+    const dieMatch = partWithoutSign.match(dieRegex);
 
     if (dieMatch) {
        const count = dieMatch[1] ? parseInt(dieMatch[1], 10) : 1;
-      const sides = dieMatch[2].toUpperCase() === 'F' ? 'F' : parseInt(dieMatch[2], 10);
+       const sides = dieMatch[2].toUpperCase() === 'F' ? 'F' : parseInt(dieMatch[2], 10);
       result.dice.push({
         count: count,
         sides: sides,
+        sign: sign
       });
     } else {
-      result.modifier += parseInt(trimmedPart, 10) || 0;
+      result.modifier += (parseInt(trimmedPart, 10) || 0);
     }
   }
 
@@ -62,18 +69,27 @@ export function getCombinationStats(macro: string): { min: number, max: number, 
 
     for (const die of dice) {
         if (die.sides === 'F') {
-            min += die.count * -1;
-            max += die.count * 1;
-            average += die.count * 0;
-        } else if (die.sides === 2) {
-            // Special case for d2 to be 0 or 1
-            min += die.count * 0;
-            max += die.count * 1;
-            average += die.count * 0.5;
+            min += die.count * (die.sign === 1 ? -1 : 1);
+            max += die.count * (die.sign === 1 ? 1 : -1);
+            // average doesn't change for fudge dice
+        } else if (die.sides === 2) { // d2 (0-1)
+            if (die.sign === 1) {
+                min += die.count * 0;
+                max += die.count * 1;
+            } else {
+                min -= die.count * 1;
+                max -= die.count * 0;
+            }
+            average += die.count * 0.5 * die.sign;
         } else if (typeof die.sides === 'number') {
-            min += die.count * 1;
-            max += die.count * die.sides;
-            average += die.count * ((die.sides + 1) / 2);
+            if (die.sign === 1) {
+                min += die.count * 1;
+                max += die.count * die.sides;
+            } else {
+                min -= die.count * die.sides;
+                max -= die.count * 1;
+            }
+            average += die.count * ((die.sides + 1) / 2) * die.sign;
         }
     }
     return { min, max, average };
@@ -96,8 +112,8 @@ export function simulateRoll(macro: string): SimulationResult {
         } else if (typeof die.sides === 'number') {
             result = Math.floor(Math.random() * die.sides) + 1;
         }
-        total += result;
-        individualRolls.push({ sides: die.sides, result });
+        total += result * die.sign;
+        individualRolls.push({ sides: die.sides, result, sign: die.sign });
     }
   }
   return { total, individualRolls, modifier };
@@ -123,18 +139,19 @@ export function calculateTheoreticalDistribution(
   const results: Record<number, number> = {};
   
   if (dice.length === 1 && typeof dice[0].sides === 'number' && dice[0].count === 1) {
-    const sides = dice[0].sides;
+    const die = dice[0];
+    const sides = die.sides;
     const isD2 = sides === 2;
     const runsPerOutcome = totalRuns / (isD2 ? 2 : sides);
     
     if (isD2) {
         // Special case for d2 (0-1)
-        results[0 + modifier] = runsPerOutcome;
-        results[1 + modifier] = runsPerOutcome;
+        results[0 * die.sign + modifier] = (results[0 * die.sign + modifier] || 0) + runsPerOutcome;
+        results[1 * die.sign + modifier] = (results[1 * die.sign + modifier] || 0) + runsPerOutcome;
     } else {
         for (let i = 1; i <= sides; i++) {
-          const roll = i + modifier;
-          results[roll] = runsPerOutcome;
+          const roll = i * die.sign + modifier;
+          results[roll] = (results[roll] || 0) + runsPerOutcome;
         }
     }
   }
