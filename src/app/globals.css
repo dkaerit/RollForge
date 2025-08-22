@@ -40,3 +40,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  @keyframes scroll-background {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: -400px -400px;
+    }
+  }
+
+  .bg-animated-pattern {
+    background-image: url('/dice-pattern.svg');
+    background-size: 400px 400px;
+    background-repeat: repeat;
+    animation: scroll-background 20s linear infinite;
+  }
+}

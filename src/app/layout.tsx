@@ -28,7 +28,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={cn('font-body antialiased min-h-screen flex flex-col')}>
+      <body className={cn('font-body antialiased min-h-screen flex flex-col bg-animated-pattern')}>
         <LanguageProvider>
           {children}
           <Toaster />
