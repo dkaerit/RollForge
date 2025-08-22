@@ -36,20 +36,31 @@ const D100 = (props: SVGProps<SVGSVGElement>) => (
 );
 
 const DF = (props: SVGProps<SVGSVGElement>) => (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <path d="M12 8v8m-4-4h8" />
-      <path d="M8 16h8" />
-    </svg>
-  );
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <defs>
+      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style={{stopColor: 'hsl(var(--primary))', stopOpacity: 0.8}} />
+        <stop offset="100%" style={{stopColor: 'hsl(var(--accent))', stopOpacity: 0.8}} />
+      </linearGradient>
+    </defs>
+    <path
+      d="M20 12c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8z"
+      fill="url(#grad1)"
+      stroke="hsl(var(--border))"
+    />
+    <path d="M8 12h8" stroke="hsl(var(--primary-foreground))" />
+    <path d="M12 8v8" stroke="hsl(var(--primary-foreground))" />
+    <path d="M9 15h6" stroke="hsl(var(--primary-foreground))" />
+  </svg>
+);
 
 const imageUrls: Record<number, string> = {
     2: 'https://i.imgur.com/ThNplfp.png',
@@ -71,6 +82,10 @@ interface DiceIconProps extends Omit<SVGProps<SVGSVGElement>, 'width' | 'height'
 export function DiceIcon({ sides, className, width = 20, height = 20, ...props }: DiceIconProps) {
   const imageUrl = imageUrls[sides];
 
+  if (sides === 0) {
+    return <DF {...props} className={className} />;
+  }
+
   if (imageUrl) {
     return (
         <Image
@@ -86,8 +101,6 @@ export function DiceIcon({ sides, className, width = 20, height = 20, ...props }
   
   // Fallback to SVG for dice without custom images
   switch (sides) {
-    case 0: // For Fudge Dice (dF)
-      return <DF {...props} className={className} />;
     default:
       // Default to d6 SVG if no image and no specific SVG
       return <svg
