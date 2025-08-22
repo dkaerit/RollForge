@@ -47,13 +47,13 @@
       background-position: 0 0;
     }
     100% {
-      background-position: -512px -512px;
+      background-position: -256px -256px;
     }
   }
 
   .bg-animated-pattern {
     background-image: url('https://i.imgur.com/1xE1rQq.png');
-    background-size: 512px 512px;
+    background-size: 256px 256px;
     background-repeat: repeat;
     animation: scroll-background 30s linear infinite;
   }
