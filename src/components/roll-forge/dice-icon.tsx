@@ -57,7 +57,9 @@ const imageUrls: Record<number, string> = {
     6: 'https://i.imgur.com/dkGJq1L.png',
     8: 'https://i.imgur.com/jwo6kIg.png',
     10: 'https://i.imgur.com/RAIzuDQ.png',
+    12: 'https://i.imgur.com/CNxNse1.png',
     20: 'https://i.imgur.com/QcuW5V7.png',
+    100: 'https://i.imgur.com/qm8T3ZH.png',
 }
 
 interface DiceIconProps extends Omit<SVGProps<SVGSVGElement>, 'width' | 'height'> {
@@ -86,10 +88,6 @@ export function DiceIcon({ sides, className, width = 20, height = 20, ...props }
   switch (sides) {
     case 0: // For Fudge Dice (dF)
       return <DF {...props} className={className} />;
-    case 12:
-      return <D12 {...props} className={className} />;
-    case 100:
-      return <D100 {...props} className={className} />;
     default:
       // Default to d6 SVG if no image and no specific SVG
       return <svg
