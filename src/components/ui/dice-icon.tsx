@@ -136,8 +136,8 @@ const DF = (props: SVGProps<SVGSVGElement>) => (
         d="M18 2H6C3.79086 2 2 3.79086 2 6V18C2 20.2091 3.79086 22 6 22H18C20.2091 22 22 20.2091 22 18V6C22 3.79086 20.2091 2 18 2Z"
         fill="url(#grad1)"
       />
-      <path d="M12 6V18" stroke="hsl(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
-      <path d="M6 12H18" stroke="hsl(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
+      <path d="M12 5V19" stroke="hsl(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
+      <path d="M5 12H19" stroke="hsl(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 
