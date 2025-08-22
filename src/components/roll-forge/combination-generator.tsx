@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { DiceIcon } from './dice-icon';
+import { DiceIcon } from '@/components/ui/dice-icon';
 import { Loader2, Wand2, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { DiceCombination } from './types';
