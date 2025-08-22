@@ -7,6 +7,7 @@
   "minRollLabel": "Мин. бросок",
   "maxRollLabel": "Макс. бросок",
   "availableDiceLabel": "Доступные кости",
+  "d2Tooltip": "d2 выбрасывает 0 или 1.",
   "forgeCombinationsButton": "Создать комбинации",
   "manualSimulatorTitle": "Ручной симулятор",
   "manualSimulatorDescription": "Введите комбинацию для непосредственного анализа.",

@@ -7,6 +7,7 @@
   "minRollLabel": "最小投掷",
   "maxRollLabel": "最大投掷",
   "availableDiceLabel": "可用骰子",
+  "d2Tooltip": "一个d2骰子会掷出0或1。",
   "forgeCombinationsButton": "生成组合",
   "manualSimulatorTitle": "手动模拟器",
   "manualSimulatorDescription": "输入一个组合以直接分析它。",

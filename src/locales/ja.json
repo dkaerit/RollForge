@@ -7,6 +7,7 @@
   "minRollLabel": "最小ロール",
   "maxRollLabel": "最大ロール",
   "availableDiceLabel": "利用可能なサイコロ",
+  "d2Tooltip": "d2は0または1をロールします。",
   "forgeCombinationsButton": "組み合わせを生成",
   "manualSimulatorTitle": "手動シミュレーター",
   "manualSimulatorDescription": "組み合わせを入力して直接分析します。",

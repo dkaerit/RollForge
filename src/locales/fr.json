@@ -7,6 +7,7 @@
   "minRollLabel": "Lancer Min",
   "maxRollLabel": "Lancer Max",
   "availableDiceLabel": "Dés Disponibles",
+  "d2Tooltip": "Un d2 donne un 0 ou un 1.",
   "forgeCombinationsButton": "Forger les Combinaisons",
   "manualSimulatorTitle": "Simulateur Manuel",
   "manualSimulatorDescription": "Entrez une combinaison pour l'analyser directement.",

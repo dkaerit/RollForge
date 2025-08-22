@@ -27,6 +27,12 @@ import { useToast } from '@/hooks/use-toast';
 import type { DiceCombination } from './types';
 import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/context/language-context';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const availableDiceTypes = [2, 4, 6, 8, 10, 12, 20, 100];
 const fudgeDieType = 'dF';
@@ -160,11 +166,13 @@ export function CombinationGenerator({
 
               <FormItem>
                 <FormLabel>{t('availableDiceLabel')}</FormLabel>
+                <TooltipProvider>
                 <div className="grid grid-cols-3 gap-2 pt-2">
                   {availableDiceTypes.map((sides) => {
                     const die = `d${sides}`;
                     const isSelected = selectedDice.includes(die);
-                    return (
+                    
+                    const button = (
                       <Button
                         key={sides}
                         type="button"
@@ -173,9 +181,22 @@ export function CombinationGenerator({
                         className="flex items-center justify-center gap-2"
                       >
                         <DiceIcon sides={sides} className="h-5 w-5" />
-                        {sides === 2 ? "d2(0-1)" : die}
+                        {die}
                       </Button>
                     );
+                    
+                    if (sides === 2) {
+                        return (
+                             <Tooltip key={sides}>
+                                <TooltipTrigger asChild>{button}</TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{t('d2Tooltip')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )
+                    }
+                    
+                    return button;
                   })}
                    <Button
                         key={fudgeDieType}
@@ -188,6 +209,7 @@ export function CombinationGenerator({
                         dF
                       </Button>
                 </div>
+                </TooltipProvider>
               </FormItem>
 
               <Button
