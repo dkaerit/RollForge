@@ -39,21 +39,15 @@ const DF = (props: SVGProps<SVGSVGElement>) => (
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       {...props}
     >
-      <defs>
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="hsl(var(--accent))" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.8" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M18 2H6C3.79086 2 2 3.79086 2 6V18C2 20.2091 3.79086 22 6 22H18C20.2091 22 22 20.2091 22 18V6C22 3.79086 20.2091 2 18 2Z"
-        fill="url(#grad1)"
-      />
-      <path d="M12 5V19" stroke="hsl(var(--card-foreground))" strokeWidth="2" strokeLinecap="round" />
-      <path d="M5 12H19" stroke="hsl(var(--card-foreground))" strokeWidth="2" strokeLinecap="round" />
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <path d="M12 8v8m-4-4h8" />
+      <path d="M8 16h8" />
     </svg>
   );
 
