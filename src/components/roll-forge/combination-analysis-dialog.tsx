@@ -20,7 +20,7 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
+  Tooltip as RechartsTooltip,
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
@@ -35,7 +35,6 @@ import {
   type SimulationResult,
 } from '@/lib/dice-utils';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
 import type { DiceCombination } from './types';
 import type { AnalyzeDiceCombinationOutput } from '@/ai/flows/analyze-dice-combination';
 import { useToast } from '@/hooks/use-toast';
@@ -43,8 +42,13 @@ import { AnimatedNumber } from './animated-number';
 import { ScrollArea } from '../ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/context/language-context';
-import { DiceIcon } from '../ui/dice-icon';
-import { Separator } from '../ui/separator';
+import { DiceIcon } from '@/components/roll-forge/dice-icon';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface CombinationAnalysisDialogProps {
   combination: DiceCombination;
@@ -148,20 +152,30 @@ export function CombinationAnalysisDialog({
               <CardTitle className="font-headline">{t('liveSimulationTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
+              <TooltipProvider>
                <div className="grid grid-cols-2 gap-4 w-full">
                   <div className="flex flex-col gap-2 items-center justify-center p-2 rounded-lg bg-background w-full min-h-[80px]">
                       {simulationResult && (
                          <div className="flex flex-col gap-2 text-sm w-full font-mono">
-                           {simulationResult.individualRolls.map((roll, index) => (
-                              <div key={index} className="flex items-center gap-2">
-                                <DiceIcon sides={typeof roll.sides === 'number' ? roll.sides : 0} className="w-5 h-5 text-accent" />
-                                <span>{roll.result}</span>
-                              </div>
-                           ))}
+                           <div className="flex flex-wrap items-center gap-2">
+                            {simulationResult.individualRolls.map((roll, index) => (
+                                <Tooltip key={index}>
+                                  <TooltipTrigger asChild>
+                                    <div className="flex items-center gap-2 bg-muted p-1 rounded-md">
+                                        <DiceIcon sides={typeof roll.sides === 'number' ? roll.sides : 0} className="w-5 h-5" />
+                                        <span>{roll.result}</span>
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>d{roll.sides}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                            ))}
+                            </div>
                             {simulationResult.modifier !== 0 && (
-                                <div className="flex items-center gap-2">
-                                    <span className="w-5 h-5 flex items-center justify-center text-accent">#</span>
-                                    <span>{simulationResult.modifier}</span>
+                                <div className="flex items-center gap-2 p-1">
+                                    <span className="w-5 h-5 flex items-center justify-center text-accent font-bold">#</span>
+                                    <span>{simulationResult.modifier > 0 ? `+ ${simulationResult.modifier}` : `- ${Math.abs(simulationResult.modifier)}`}</span>
                                 </div>
                             )}
                          </div>
@@ -171,6 +185,7 @@ export function CombinationAnalysisDialog({
                     <AnimatedNumber value={simulationResult?.total ?? null} />
                   </div>
                </div>
+              </TooltipProvider>
                 <Button onClick={handleSimulateRoll} className="w-full">{t('rollTheDice')}</Button>
             </CardContent>
           </Card>
@@ -185,7 +200,7 @@ export function CombinationAnalysisDialog({
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
                   <XAxis dataKey="roll" stroke="hsl(var(--muted-foreground))" fontSize={12} />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <Tooltip
+                  <RechartsTooltip
                     cursor={{ fill: 'hsl(var(--muted))' }}
                     contentStyle={{
                         backgroundColor: 'hsl(var(--background))',
