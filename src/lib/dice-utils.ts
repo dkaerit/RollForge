@@ -173,14 +173,16 @@ export function generateFallbackCombinations(
 ): GenerateDiceCombinationsOutput {
   const { minRoll, maxRoll, availableDice } = input;
   const combinations: GenerateDiceCombinationsOutput['combinations'] = [];
-  const hasD2 = availableDice.includes('d2');
+  const targetAvg = (minRoll + maxRoll) / 2;
+  const targetRange = maxRoll - minRoll;
 
   const numericDice = availableDice
-    .filter(d => d !== 'dF' && d !== 'd2')
+    .filter(d => d.startsWith('d') && d !== 'dF')
     .map(d => parseInt(d.slice(1), 10))
     .sort((a, b) => a - b);
   
   const addCombination = (comboStr: string) => {
+     if (!comboStr) return;
      const stats = getCombinationStats(comboStr);
       combinations.push({
         dice: comboStr,
@@ -190,60 +192,69 @@ export function generateFallbackCombinations(
       });
   }
 
-  // Simple case: try with one die + modifier
+  // Strategy 1: Find the best single die + modifier
   for (const sides of numericDice) {
-    const die = `1d${sides}`;
+    if (sides === 2) continue; // Skip d2 for this strategy
     const baseAvg = (sides + 1) / 2;
-    const targetAvg = (minRoll + maxRoll) / 2;
-    let modifier = Math.round(targetAvg - baseAvg);
-    const comboWithoutD2 = `${die}${modifier === 0 ? '' : (modifier > 0 ? '+' : '') + modifier}`;
-    
-    addCombination(comboWithoutD2);
-
-    if (hasD2) {
-      const stats = getCombinationStats(comboWithoutD2);
-      const maxDiff = maxRoll - stats.max;
-      if (maxDiff > 0) {
-        const d2Count = Math.round(maxDiff);
-        if (d2Count > 0) {
-          addCombination(`${comboWithoutD2}+${d2Count}d2`);
-        }
-      }
-    }
+    const modifier = Math.round(targetAvg - baseAvg);
+    const comboStr = `1d${sides}${modifier > 0 ? '+' : ''}${modifier !== 0 ? modifier : ''}`;
+    addCombination(comboStr);
   }
 
-  // Case 2: try with two dice + modifier
-  if (numericDice.length > 1) {
-    for (let i = 0; i < numericDice.length; i++) {
-      for (let j = i; j < numericDice.length; j++) {
-        const sides1 = numericDice[i];
-        const sides2 = numericDice[j];
-        const die = `1d${sides1}+1d${sides2}`;
-        const baseAvg = ((sides1 + 1) / 2) + ((sides2 + 1) / 2);
-        const targetAvg = (minRoll + maxRoll) / 2;
-        let modifier = Math.round(targetAvg - baseAvg);
-        const comboWithoutD2 = `${die}${modifier === 0 ? '' : (modifier > 0 ? '+' : '') + modifier}`;
-        
-        addCombination(comboWithoutD2);
+  // Strategy 2: Two identical dice to create a bell curve centered on the target
+  for (const sides of numericDice) {
+     if (sides === 2) continue;
+     const baseAvg = 2 * ((sides + 1) / 2);
+     const modifier = Math.round(targetAvg - baseAvg);
+     const comboStr = `2d${sides}${modifier > 0 ? '+' : ''}${modifier !== 0 ? modifier : ''}`;
+     addCombination(comboStr);
+  }
 
-        if (hasD2) {
-          const stats = getCombinationStats(comboWithoutD2);
+  // Strategy 3: Find a die that matches the range, then add a modifier
+  for (const sides of numericDice) {
+      if (sides === 2) continue;
+      const range = sides - 1;
+      if (Math.abs(range - targetRange) < 5) { // If the die's range is close
+          const baseMin = 1;
+          const modifier = minRoll - baseMin;
+          const comboStr = `1d${sides}${modifier > 0 ? '+' : ''}${modifier !== 0 ? modifier : ''}`;
+          addCombination(comboStr);
+      }
+  }
+  
+  // Strategy 4: Use d2s to fill small gaps
+  if (availableDice.includes('d2')) {
+      for (const combo of combinations.slice(0, 5)) { // Iterate over a copy
+          const stats = getCombinationStats(combo.dice);
           const maxDiff = maxRoll - stats.max;
-          if (maxDiff > 0) {
-            const d2Count = Math.round(maxDiff);
-            if (d2Count > 0) {
-              addCombination(`${comboWithoutD2}+${d2Count}d2`);
-            }
+          if (maxDiff > 0 && maxDiff <= 5) { // Add d2s if the gap is small
+              const d2Count = Math.round(maxDiff);
+              if (d2Count > 0) {
+                 addCombination(`${combo.dice}+${d2Count}d2`);
+              }
           }
-        }
+           const minDiff = stats.min - minRoll;
+           if (minDiff > 0 && minDiff <=3) { // Use negative d2s to lower min
+                const d2Count = Math.round(minDiff);
+                if (d2Count > 0) {
+                    addCombination(`${combo.dice}-${d2Count}d2`);
+                }
+           }
       }
-    }
   }
+
 
   // Remove duplicates and limit to a reasonable number
   const uniqueCombinations = Array.from(new Map(combinations.map(item => [item.dice.replace(/\+[0]$/, ""), item])).values());
 
-  return { combinations: uniqueCombinations.slice(0, 20) };
+  // Sort by a simple score: how close is the average and range
+  uniqueCombinations.sort((a, b) => {
+      const aScore = Math.abs(a.average - targetAvg) + Math.abs((a.max - a.min) - targetRange);
+      const bScore = Math.abs(b.average - targetAvg) + Math.abs((b.max - b.min) - targetRange);
+      return aScore - bScore;
+  });
+
+  return { combinations: uniqueCombinations.slice(0, 10) };
 }
 
 // Fallback analysis generator

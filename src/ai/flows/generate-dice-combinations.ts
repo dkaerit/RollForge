@@ -15,6 +15,7 @@ const GenerateDiceCombinationsInputSchema = z.object({
   minRoll: z.number().describe('The minimum roll value for the target range.'),
   maxRoll: z.number().describe('The maximum roll value for the target range.'),
   availableDice: z.array(z.string()).describe('An array of available dice types (e.g., d4, d6, d8, d10, d12, d20, dF).'),
+  baseCombinations: z.array(z.string()).optional().describe('An array of base combinations to use as a starting point.'),
 });
 export type GenerateDiceCombinationsInput = z.infer<
   typeof GenerateDiceCombinationsInputSchema
@@ -51,6 +52,11 @@ Minimum: {{{minRoll}}}
 Maximum: {{{maxRoll}}}
 
 Available Dice: {{{availableDice}}}
+
+{{#if baseCombinations}}
+Here are some good starting combinations. Use these as inspiration. You can refine them, or suggest creative alternatives.
+Base Combinations: {{{baseCombinations}}}
+{{/if}}
 
 Suggest several creative dice combinations using the available dice.
 - The 'd2' die rolls 0 or 1.

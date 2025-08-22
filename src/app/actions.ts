@@ -19,20 +19,31 @@ export async function generateCombinationsAction(
   input: GenerateDiceCombinationsInput
 ): Promise<GenerateDiceCombinationsOutput | null> {
   try {
-    console.log('Attempting to generate combinations with AI...');
-    const result = await generateDiceCombinations(input);
-    if (result && result.combinations && result.combinations.length > 0) {
-      console.log('AI generation successful.');
-      return result;
-    }
-    console.log('AI returned no combinations, trying fallback.');
+    // First, always run the fallback generator to get a baseline of logical results.
+    console.log('Generating fallback combinations...');
     const fallbackResult = generateFallbackCombinations(input);
+    
+    const aiInput: GenerateDiceCombinationsInput = {
+      ...input,
+      baseCombinations: fallbackResult.combinations.map(c => c.dice)
+    };
+
+    console.log('Attempting to generate combinations with AI...');
+    const aiResult = await generateDiceCombinations(aiInput);
+    
+    if (aiResult && aiResult.combinations && aiResult.combinations.length > 0) {
+      console.log('AI generation successful. Merging results.');
+      // Combine AI and fallback results, removing duplicates.
+      const allCombinations = [...fallbackResult.combinations, ...aiResult.combinations];
+      const uniqueCombinations = Array.from(new Map(allCombinations.map(c => [c.dice, c])).values());
+      return { combinations: uniqueCombinations };
+    }
+    
+    console.log('AI returned no combinations, using fallback only.');
     return fallbackResult;
+
   } catch (error) {
-    console.error(
-      'Error generating combinations with AI, using fallback:',
-      error
-    );
+    console.error('Error in generateCombinationsAction, trying final fallback:', error);
     try {
       const fallbackResult = generateFallbackCombinations(input);
       return fallbackResult;
