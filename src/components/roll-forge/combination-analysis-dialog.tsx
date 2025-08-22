@@ -49,6 +49,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Plus, Minus } from 'lucide-react';
 
 interface CombinationAnalysisDialogProps {
   combination: DiceCombination;
@@ -156,9 +157,8 @@ export function CombinationAnalysisDialog({
                <div className="grid grid-cols-2 gap-4 w-full">
                   <div className="flex flex-col gap-2 items-center justify-center p-2 rounded-lg bg-background w-full min-h-[80px]">
                       {simulationResult && (
-                         <div className="flex flex-col gap-2 text-sm w-full font-mono">
-                           <div className="flex flex-wrap items-center gap-2">
-                            {simulationResult.individualRolls.map((roll, index) => (
+                         <div className="flex flex-wrap items-center gap-2 text-sm font-mono">
+                           {simulationResult.individualRolls.map((roll, index) => (
                                 <Tooltip key={index}>
                                   <TooltipTrigger asChild>
                                     <div className="flex items-center gap-2 bg-muted p-1 rounded-md">
@@ -171,11 +171,10 @@ export function CombinationAnalysisDialog({
                                   </TooltipContent>
                                 </Tooltip>
                             ))}
-                            </div>
                             {simulationResult.modifier !== 0 && (
-                                <div className="flex items-center gap-2 p-1">
-                                    <span className="w-5 h-5 flex items-center justify-center text-accent font-bold">#</span>
-                                    <span>{simulationResult.modifier > 0 ? `+ ${simulationResult.modifier}` : `- ${Math.abs(simulationResult.modifier)}`}</span>
+                                <div className="flex items-center gap-2 p-1 text-lg">
+                                    {simulationResult.modifier > 0 ? <Plus className="w-4 h-4 text-accent" /> : <Minus className="w-4 h-4 text-accent" />}
+                                    <span className='font-bold'>{Math.abs(simulationResult.modifier)}</span>
                                 </div>
                             )}
                          </div>
