@@ -41,7 +41,7 @@ const nextConfig: NextConfig = {
         'node:dgram': 'window dgram',
       });
     }
-    return config;
+    return config; 
   },
 };
 
