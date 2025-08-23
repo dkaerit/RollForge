@@ -34,6 +34,12 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './out' # Asegúrate de que esta es la carpeta de salida de tu build estático
+          name: github-pages # Añade el nombre explícito
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
