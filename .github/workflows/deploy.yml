@@ -34,6 +34,17 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      # Añadir este paso de depuración
+      - name: Check output directory
+        run: |
+          ls -l
+          if [ -d "./out" ]; then
+            echo "Directory './out' exists."
+          else
+            echo "Directory './out' does NOT exist."
+            exit 1
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
