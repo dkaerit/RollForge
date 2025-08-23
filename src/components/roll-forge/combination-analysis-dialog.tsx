@@ -24,7 +24,6 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { analyzeCombinationAction } from '@/app/actions';
 import {
   runSimulation,
   formatSimulationDataForChart,
@@ -37,7 +36,6 @@ import {
 import { Button } from '@/components/ui/button';
 import type { DiceCombination } from './types';
 import type { AnalyzeDiceCombinationOutput } from '@/ai/flows/analyze-dice-combination';
-import { useToast } from '@/hooks/use-toast';
 import { AnimatedNumber } from './animated-number';
 import { ScrollArea } from '../ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -69,7 +67,6 @@ export function CombinationAnalysisDialog({
     useState<AnalyzeDiceCombinationOutput | null>(null);
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const { toast } = useToast();
-  const { t, language } = useLanguage();
 
   const chartData = useMemo(() => {
     const parsed = parseDiceString(combination.dice);
@@ -84,35 +81,6 @@ export function CombinationAnalysisDialog({
     return formatSimulationDataForChart(results);
   }, [combination.dice]);
 
-  useEffect(() => {
-    let isCancelled = false;
-    if (open) {
-      setAnalysis(null);
-      setSimulationResult(null);
-      startTransition(async () => {
-        const result = await analyzeCombinationAction({
-          diceCombination: combination.dice,
-          language: language,
-        });
-
-        if (isCancelled) return;
-        
-        if (result) {
-          setAnalysis(result);
-        } else {
-          toast({
-            variant: 'destructive',
-            title: t('analysisFailedTitle'),
-            description: t('analysisFailedDescription'),
-          });
-        }
-      });
-    }
-    return () => {
-      isCancelled = true;
-    }
-  }, [open, combination, toast, t, language]);
-  
   const handleSimulateRoll = () => {
     setSimulationResult(simulateRoll(combination.dice));
   };

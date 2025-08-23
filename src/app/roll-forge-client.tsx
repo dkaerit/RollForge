@@ -5,7 +5,6 @@ import type { DiceCombination } from '@/components/roll-forge/types';
 import { CombinationGenerator } from '@/components/roll-forge/combination-generator';
 import { ResultsDisplay, type SortKey, type SortDirection } from '@/components/roll-forge/results-display';
 import { CombinationAnalysisDialog } from '@/components/roll-forge/combination-analysis-dialog';
-import { generateCombinationsAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/roll-forge/language-switcher';
@@ -34,110 +33,108 @@ export function RollForgeClient() {
     maxRoll: number,
     availableDice: string[]
   ) => {
-    startTransition(async () => {
-      const result = await generateCombinationsAction({
-        minRoll,
-        maxRoll,
-        availableDice,
-      });
-
-      if (result?.combinations) {
-        const processedCombinations = result.combinations
-          .filter(
-            (combo): combo is Omit<DiceCombination, 'fitScore' | 'fitDescription' | 'distributionScore' | 'distributionShape'> =>
-              combo &&
-              typeof combo.dice === 'string' &&
-              typeof combo.min === 'number' &&
-              typeof combo.max === 'number' &&
-              typeof combo.average === 'number'
-          )
-          .map((combo) => {
-            const comboMin = combo.min;
-            const comboMax = combo.max;
-            
-            // Calculate Fit Score
-            const rangeDiff = maxRoll - minRoll;
-            const deviation =
-              Math.abs(minRoll - comboMin) + Math.abs(maxRoll - comboMax);
-            let fitScore = 0;
-            if (rangeDiff > 0) {
-              fitScore = Math.max(0, (1 - deviation / rangeDiff) * 100);
-            } else if (deviation === 0) {
-              fitScore = 100;
-            }
-
-            // Determine Fit Description
-            let fitDescription = 'fit.noOverlap';
-            const isContained = comboMin >= minRoll && comboMax <= maxRoll;
-            const isWider = comboMin < minRoll && comboMax > maxRoll;
-            const isDisplacedLow = comboMin < minRoll && comboMax >= minRoll && comboMax <= maxRoll;
-            const isDisplacedHigh = comboMin >= minRoll && comboMin <= maxRoll && comboMax > maxRoll;
-
-            if (comboMin === minRoll && comboMax === maxRoll) {
-                fitDescription = 'fit.perfect';
-            } else if (isContained) {
-                fitDescription = 'fit.contained';
-            } else if (isWider) {
-                fitDescription = 'fit.wider';
-            } else if (isDisplacedLow) {
-                fitDescription = 'fit.exceedsLow';
-            } else if (isDisplacedHigh) {
-                fitDescription = 'fit.exceedsHigh';
-            } else {
-                fitDescription = 'fit.noOverlap';
-            }
-
-            // Calculate Distribution Score
-            const parsed = parseDiceString(combo.dice);
-            const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
-            const variety = new Set(parsed.dice.map(d => d.sides)).size;
-
-            let avgSides = 0;
-            if (numDice > 0) {
-                avgSides = parsed.dice.reduce((sum, d) => {
-                    const sides = d.sides === 'F' ? 3 : (d.sides === 2 ? 2 : d.sides);
-                    return sum + (sides * d.count);
-                }, 0) / numDice;
-            }
-
-            let distributionScore = 0;
-            if (numDice > 1) {
-                // Base score on number of dice (more dice = more bell-like)
-                const baseScore = Math.log(numDice) * 2;
-                // Bonus for variety
-                const varietyBonus = variety > 1 ? 0.5 : 0;
-                // Penalty for high-sided dice (more sides = flatter)
-                const sidesPenalty = Math.max(0, (avgSides - 8) / 20) * 0.8;
-                distributionScore = Math.max(0, baseScore + varietyBonus - sidesPenalty);
-            } else if (numDice === 1) {
-                distributionScore = 0;
-            }
-            
-            let distributionShape = 'distribution.flat';
-            if (distributionScore > 1.2) {
-              distributionShape = 'distribution.bell';
-            } else if (distributionScore > 0.4) {
-              distributionShape = 'distribution.somewhatBell';
-            }
-
-            return {
-              ...combo,
-              fitScore,
-              fitDescription,
-              distributionScore,
-              distributionShape,
-            };
-          });
-        setCombinations(processedCombinations);
-      } else {
-        toast({
-          variant: 'destructive',
-          title: t('toastErrorTitle'),
-          description: t('toastErrorDescription'),
-        });
-        setCombinations([]);
-      }
+    console.log('Generate button clicked in static version with inputs:', {
+ minRoll,
+ maxRoll,
+ availableDice
     });
+    // In the static version, we don't call the AI flow.
+    // We can optionally provide a placeholder response or do nothing.
+    // For now, let's simulate a response with some placeholder data.
+    const placeholderCombinations: DiceCombination[] = [
+      { dice: '3d6', min: 3, max: 18, average: 10.5 },
+      { dice: '2d10', min: 2, max: 20, average: 11 },
+      { dice: '1d20', min: 1, max: 20, average: 10.5 },
+      // Add more placeholder combinations as needed
+    ];
+
+    const processedCombinations = placeholderCombinations
+      .filter(
+        (combo): combo is Omit<DiceCombination, 'fitScore' | 'fitDescription' | 'distributionScore' | 'distributionShape'> =>
+          combo &&
+          typeof combo.dice === 'string' &&
+          typeof combo.min === 'number' &&
+          typeof combo.max === 'number' &&
+          typeof combo.average === 'number'
+      )
+      .map((combo) => {
+        const comboMin = combo.min;
+        const comboMax = combo.max;
+
+        // Calculate Fit Score
+        const rangeDiff = maxRoll - minRoll;
+        const deviation =
+          Math.abs(minRoll - comboMin) + Math.abs(maxRoll - comboMax);
+        let fitScore = 0;
+        if (rangeDiff > 0) {
+          fitScore = Math.max(0, (1 - deviation / rangeDiff) * 100);
+        } else if (deviation === 0) {
+          fitScore = 100;
+        }
+
+        // Determine Fit Description
+        let fitDescription = 'fit.noOverlap';
+        const isContained = comboMin >= minRoll && comboMax <= maxRoll;
+        const isWider = comboMin < minRoll && comboMax > maxRoll;
+        const isDisplacedLow = comboMin < minRoll && comboMax >= minRoll && comboMax <= maxRoll;
+        const isDisplacedHigh = comboMin >= minRoll && comboMin <= maxRoll && comboMax > maxRoll;
+
+        if (comboMin === minRoll && comboMax === maxRoll) {
+ fitDescription = 'fit.perfect';
+        } else if (isContained) {
+ fitDescription = 'fit.contained';
+        } else if (isWider) {
+ fitDescription = 'fit.wider';
+        } else if (isDisplacedLow) {
+ fitDescription = 'fit.exceedsLow';
+        } else if (isDisplacedHigh) {
+ fitDescription = 'fit.exceedsHigh';
+        } else {
+ fitDescription = 'fit.noOverlap';
+        }
+
+        // Calculate Distribution Score
+        const parsed = parseDiceString(combo.dice);
+        const numDice = parsed.dice.reduce((sum, d) => sum + d.count, 0);
+        const variety = new Set(parsed.dice.map(d => d.sides)).size;
+
+        let avgSides = 0;
+        if (numDice > 0) {
+ avgSides = parsed.dice.reduce((sum, d) => {
+            const sides = d.sides === 'F' ? 3 : (d.sides === 2 ? 2 : d.sides);
+ return sum + (sides * d.count);
+          }, 0) / numDice;
+        }
+
+        let distributionScore = 0;
+        if (numDice > 1) {
+          // Base score on number of dice (more dice = more bell-like)
+          const baseScore = Math.log(numDice) * 2;
+          // Bonus for variety
+          const varietyBonus = variety > 1 ? 0.5 : 0;
+          // Penalty for high-sided dice (more sides = flatter)
+          const sidesPenalty = Math.max(0, (avgSides - 8) / 20) * 0.8;
+ distributionScore = Math.max(0, baseScore + varietyBonus - sidesPenalty);
+        } else if (numDice === 1) {
+ distributionScore = 0;
+        }
+
+        let distributionShape = 'distribution.flat';
+        if (distributionScore > 1.2) {
+ distributionShape = 'distribution.bell';
+        } else if (distributionScore > 0.4) {
+ distributionShape = 'distribution.somewhatBell';
+        }
+
+        return {
+          ...combo,
+ fitScore,
+ fitDescription,
+ distributionScore,
+ distributionShape,
+        };
+      });
+ setCombinations(processedCombinations);
   };
 
   const handleManualSimulate = (combination: DiceCombination) => {
